@@ -1,0 +1,1528 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>คณะวิทยาการจัดการ — Student Service Portal</title>
+  <meta name="description" content="เว็บไซต์คณะวิทยาการจัดการ เน้นบริการนักศึกษา ข่าว กิจกรรม แหล่งฝึก และเครือข่ายความร่วมมือ" />
+  <style>
+    :root{
+      /* Light Purple Business Tone */
+      --bg: #fbf9ff;
+      --surface: rgba(255,255,255,.85);
+      --card: #ffffff;
+      --line: rgba(85, 65, 120, .14);
+      --text: #1f1b2e;
+      --muted: rgba(31,27,46,.70);
+
+      --p50:#fbf7ff;
+      --p100:#f1e7ff;
+      --p200:#e5d3ff;
+      --p300:#d6baff;
+      --p400:#c39bff;
+      --p500:#aa78ff;
+      --p600:#8f5cff;
+      --p700:#7344e6;
+      --p800:#5a33b8;
+
+      --ok:#1f9d62;
+      --warn:#b26a00;
+
+      --shadow: 0 18px 50px rgba(34, 24, 55, .12);
+      --shadow2: 0 10px 26px rgba(34, 24, 55, .10);
+      --radius: 18px;
+      --radius2: 14px;
+
+      --max: 1180px;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans Thai", "Noto Sans", Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1100px 600px at 15% -10%, var(--p200), transparent 60%),
+        radial-gradient(900px 520px at 95% 20%, rgba(170,120,255,.28), transparent 55%),
+        linear-gradient(180deg, var(--bg), #ffffff 55%, var(--p50));
+      line-height:1.55;
+    }
+
+    a{ color:inherit; text-decoration:none; }
+    button{ font:inherit; }
+    img{ max-width:100%; display:block; }
+
+    /* Layout */
+    .container{ width:min(var(--max), calc(100% - 32px)); margin:0 auto; }
+    .stack-8{ display:flex; flex-direction:column; gap:8px; }
+    .stack-12{ display:flex; flex-direction:column; gap:12px; }
+    .stack-16{ display:flex; flex-direction:column; gap:16px; }
+    .stack-20{ display:flex; flex-direction:column; gap:20px; }
+    .stack-24{ display:flex; flex-direction:column; gap:24px; }
+    .row{ display:flex; gap:12px; align-items:center; }
+    .row.wrap{ flex-wrap:wrap; }
+
+    /* Topbar */
+    .topbar{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(10px);
+      background: rgba(251,249,255,.75);
+      border-bottom: 1px solid var(--line);
+    }
+    .topbar-inner{
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 12px 0;
+      gap: 14px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      min-width: 220px;
+    }
+    .brand-badge{
+      width:38px; height:38px; border-radius:12px;
+      background: linear-gradient(135deg, var(--p700), var(--p500));
+      box-shadow: var(--shadow2);
+      position:relative;
+    }
+    .brand-badge::after{
+      content:""; position:absolute; inset:10px;
+      border-radius:10px;
+      background: rgba(255,255,255,.80);
+      transform: rotate(12deg);
+    }
+    .brand-title{
+      display:flex; flex-direction:column;
+      line-height:1.1;
+    }
+    .brand-title strong{ font-size:14px; letter-spacing:.2px; }
+    .brand-title span{ font-size:12px; color:var(--muted); }
+
+    .nav{
+      display:flex; gap: 10px; align-items:center;
+    }
+    .nav a{
+      font-size:13px;
+      padding:10px 12px;
+      border-radius: 12px;
+      color: rgba(31,27,46,.86);
+      transition: all .18s ease;
+    }
+    .nav a:hover{
+      background: rgba(170,120,255,.14);
+      color: var(--text);
+    }
+
+    .actions{
+      display:flex; gap:10px; align-items:center; justify-content:flex-end;
+      min-width: 260px;
+    }
+
+    /* Search */
+    .search{
+      flex: 1;
+      display:flex; align-items:center; gap:10px;
+      max-width: 520px;
+      background: rgba(255,255,255,.75);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px 12px;
+      box-shadow: 0 6px 18px rgba(34,24,55,.06);
+    }
+    .search input{
+      border:0; outline:0; width:100%;
+      background:transparent;
+      font-size:13px;
+      color: var(--text);
+    }
+    .kbd{
+      font-size: 11px;
+      color: rgba(31,27,46,.62);
+      border: 1px solid rgba(31,27,46,.18);
+      padding: 2px 6px;
+      border-radius: 8px;
+      background: rgba(255,255,255,.6);
+      user-select:none;
+    }
+
+    .btn{
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.75);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 14px;
+      cursor:pointer;
+      transition: all .18s ease;
+      display:inline-flex; gap:10px; align-items:center;
+      box-shadow: 0 6px 18px rgba(34,24,55,.06);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    .btn:hover{ transform: translateY(-1px); box-shadow: 0 10px 24px rgba(34,24,55,.10); }
+    .btn.primary{
+      border-color: transparent;
+      background: linear-gradient(135deg, var(--p700), var(--p500));
+      color:white;
+    }
+    .btn.primary:hover{ filter: brightness(1.02); }
+    .btn.ghost{
+      background: transparent;
+      box-shadow:none;
+    }
+    .btn.ghost:hover{ background: rgba(170,120,255,.12); }
+
+    .hamburger{
+      display:none;
+      width:44px; height:44px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.75);
+      cursor:pointer;
+      box-shadow: 0 6px 18px rgba(34,24,55,.06);
+    }
+    .hamburger span{
+      display:block;
+      width:18px; height:2px;
+      background: rgba(31,27,46,.72);
+      margin: 5px auto;
+      border-radius: 2px;
+    }
+
+    /* Mobile drawer */
+    .drawer{
+      display:none;
+      position:fixed; inset:0;
+      background: rgba(15,10,26,.42);
+      z-index: 80;
+    }
+    .drawer.open{ display:block; }
+    .drawer-panel{
+      position:absolute; right:0; top:0; bottom:0;
+      width: min(360px, 92vw);
+      background: #fff;
+      border-left: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      display:flex; flex-direction:column; gap: 12px;
+    }
+    .drawer-panel a{
+      padding: 12px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(85,65,120,.12);
+      background: rgba(251,249,255,.8);
+      font-size: 14px;
+    }
+
+    /* Hero */
+    .hero{
+      padding: 34px 0 18px;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.4fr .9fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+    .hero-card{
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.75), rgba(255,255,255,.90));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .hero-card::before{
+      content:"";
+      position:absolute; inset:-80px -40px auto auto;
+      width: 260px; height: 260px;
+      background: radial-gradient(circle at 30% 30%, rgba(170,120,255,.55), transparent 60%);
+      transform: rotate(12deg);
+      pointer-events:none;
+    }
+    .hero-body{ padding: 22px; }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      font-size: 12px;
+      color: rgba(31,27,46,.78);
+      background: rgba(229,211,255,.55);
+      border: 1px solid rgba(170,120,255,.25);
+      padding: 6px 10px;
+      border-radius: 999px;
+      width: fit-content;
+    }
+    .hero-title{
+      margin: 10px 0 6px;
+      font-size: 26px;
+      letter-spacing: .2px;
+    }
+    .hero-sub{
+      margin:0;
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 64ch;
+    }
+    .hero-cta{ margin-top: 14px; display:flex; gap:10px; flex-wrap:wrap; }
+
+    .hero-aside{
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.78);
+      box-shadow: var(--shadow2);
+      padding: 16px;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+    }
+    .aside-title{
+      font-size: 13px;
+      color: rgba(31,27,46,.82);
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .aside-title small{ color: var(--muted); font-size: 12px; }
+
+    .mini-list{
+      display:flex; flex-direction:column; gap:10px;
+      margin: 0; padding: 0; list-style:none;
+    }
+    .mini-item{
+      border: 1px solid rgba(85,65,120,.12);
+      border-radius: 14px;
+      padding: 12px;
+      background: rgba(251,249,255,.8);
+    }
+    .mini-item strong{ display:block; font-size: 13px; }
+    .mini-item span{ display:block; font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+    /* Quick Services */
+    .section{ padding: 22px 0; }
+    .section-head{
+      display:flex; align-items:flex-end; justify-content:space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .section-head h2{
+      margin:0;
+      font-size: 16px;
+      letter-spacing:.2px;
+    }
+    .section-head p{
+      margin:0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .quick-grid{
+      display:grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+    }
+    .qcard{
+      border: 1px solid rgba(85,65,120,.12);
+      border-radius: var(--radius2);
+      background: rgba(255,255,255,.80);
+      box-shadow: 0 8px 22px rgba(34,24,55,.07);
+      padding: 12px;
+      display:flex; gap:10px; align-items:flex-start;
+      cursor:pointer;
+      transition: all .18s ease;
+      min-height: 76px;
+    }
+    .qcard:hover{ transform: translateY(-1px); box-shadow: 0 14px 28px rgba(34,24,55,.10); }
+    .icon{
+      width: 38px; height: 38px; border-radius: 14px;
+      background: linear-gradient(135deg, rgba(115,68,230,.18), rgba(170,120,255,.28));
+      border: 1px solid rgba(115,68,230,.18);
+      display:grid; place-items:center;
+      flex: 0 0 38px;
+    }
+    .qcard b{ font-size: 13px; display:block; }
+    .qcard small{ font-size: 12px; color: var(--muted); display:block; margin-top: 2px; }
+
+    /* Content grids */
+    .grid-2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .panel{
+      border: 1px solid rgba(85,65,120,.12);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.82);
+      box-shadow: 0 10px 26px rgba(34,24,55,.08);
+      overflow:hidden;
+    }
+    .panel-head{
+      padding: 14px 14px 10px;
+      border-bottom: 1px solid rgba(85,65,120,.10);
+      display:flex; align-items:center; justify-content:space-between; gap: 10px;
+      background: linear-gradient(180deg, rgba(241,231,255,.65), rgba(255,255,255,.75));
+    }
+    .panel-head h3{ margin:0; font-size: 14px; }
+    .panel-head .tools{ display:flex; gap:8px; align-items:center; }
+    .chip{
+      font-size: 12px;
+      color: rgba(31,27,46,.78);
+      background: rgba(229,211,255,.52);
+      border: 1px solid rgba(170,120,255,.25);
+      padding: 6px 10px;
+      border-radius: 999px;
+      cursor:pointer;
+      user-select:none;
+      transition: all .18s ease;
+    }
+    .chip:hover{ background: rgba(229,211,255,.68); }
+
+    .panel-body{ padding: 12px 14px 14px; }
+
+    .list{
+      margin: 0;
+      padding: 0;
+      list-style:none;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+    }
+    .item{
+      border: 1px solid rgba(85,65,120,.12);
+      border-radius: 14px;
+      padding: 12px;
+      background: rgba(251,249,255,.85);
+      transition: all .18s ease;
+    }
+    .item:hover{ transform: translateY(-1px); box-shadow: 0 12px 24px rgba(34,24,55,.08); }
+    .item .meta{
+      display:flex; gap: 10px; align-items:center; flex-wrap:wrap;
+      color: rgba(31,27,46,.72);
+      font-size: 12px;
+      margin-top: 6px;
+    }
+    .tag{
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(85,65,120,.18);
+      background: rgba(255,255,255,.75);
+    }
+    .badge{
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(31,157,98,.25);
+      background: rgba(31,157,98,.10);
+      color: rgba(21,120,74,.95);
+    }
+    .badge.warn{
+      border-color: rgba(178,106,0,.25);
+      background: rgba(178,106,0,.10);
+      color: rgba(140,83,0,.95);
+    }
+
+    /* Showcase / Labs */
+    .showcase{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .s-card{
+      border: 1px solid rgba(85,65,120,.12);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.82);
+      box-shadow: 0 10px 26px rgba(34,24,55,.08);
+      overflow:hidden;
+      transition: all .18s ease;
+    }
+    .s-card:hover{ transform: translateY(-1px); box-shadow: 0 16px 34px rgba(34,24,55,.10); }
+    .s-cover{
+      height: 92px;
+      background:
+        radial-gradient(140px 80px at 20% 20%, rgba(170,120,255,.55), transparent 70%),
+        radial-gradient(140px 80px at 90% 40%, rgba(115,68,230,.35), transparent 70%),
+        linear-gradient(135deg, rgba(241,231,255,.75), rgba(255,255,255,.85));
+      border-bottom: 1px solid rgba(85,65,120,.10);
+    }
+    .s-body{ padding: 12px 14px 14px; }
+    .s-body h4{ margin:0; font-size: 14px; }
+    .s-body p{ margin: 6px 0 0; font-size: 12px; color: var(--muted); }
+
+    /* Footer */
+    footer{
+      margin-top: 20px;
+      padding: 22px 0 30px;
+      border-top: 1px solid var(--line);
+      background: rgba(251,249,255,.70);
+    }
+    .footer-grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 12px;
+      align-items:start;
+    }
+    .muted{ color: var(--muted); font-size: 13px; }
+    .tiny{ font-size: 12px; color: rgba(31,27,46,.62); }
+
+    /* Modal */
+    .modal{
+      display:none;
+      position:fixed; inset:0;
+      background: rgba(15,10,26,.44);
+      z-index: 90;
+      padding: 18px;
+    }
+    .modal.open{ display:grid; place-items:center; }
+    .modal-card{
+      width: min(860px, 100%);
+      border-radius: 18px;
+      background: #fff;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .modal-head{
+      padding: 14px 14px 10px;
+      display:flex; align-items:center; justify-content:space-between; gap: 10px;
+      border-bottom: 1px solid rgba(85,65,120,.10);
+      background: linear-gradient(180deg, rgba(241,231,255,.70), rgba(255,255,255,.85));
+    }
+    .modal-head strong{ font-size: 14px; }
+    .modal-body{ padding: 14px; }
+    .modal-close{
+      border: 1px solid rgba(85,65,120,.16);
+      background: rgba(255,255,255,.78);
+      border-radius: 12px;
+      padding: 8px 10px;
+      cursor:pointer;
+    }
+    .modal-close:hover{ background: rgba(229,211,255,.55); }
+
+    /* Responsive */
+    @media (max-width: 1040px){
+      .hero-grid{ grid-template-columns: 1fr; }
+      .actions{ min-width: auto; }
+      .brand{ min-width: 190px; }
+      .quick-grid{ grid-template-columns: repeat(3, 1fr); }
+      .showcase{ grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 820px){
+      .nav{ display:none; }
+      .search{ display:none; }
+      .hamburger{ display:inline-block; }
+      .quick-grid{ grid-template-columns: repeat(2, 1fr); }
+      .grid-2{ grid-template-columns: 1fr; }
+      .showcase{ grid-template-columns: 1fr; }
+      .footer-grid{ grid-template-columns: 1fr; }
+    }
+
+    /* Print-friendly minimal */
+    @media print{
+      .topbar, .btn, .chip, .hamburger, .drawer, .modal { display:none !important; }
+      body{ background:#fff; }
+      .panel, .hero-card, .hero-aside, .s-card{ box-shadow:none; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Mobile Drawer -->
+  <div class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawer-panel" role="dialog" aria-modal="true" aria-label="เมนู">
+      <div class="row" style="justify-content:space-between;">
+        <div class="row" style="gap:10px;">
+          <div class="brand-badge" aria-hidden="true"></div>
+          <div class="stack-8">
+            <strong style="font-size:14px;">คณะวิทยาการจัดการ</strong>
+            <span class="tiny">Student Service Portal</span>
+          </div>
+        </div>
+        <button class="modal-close" onclick="toggleDrawer(false)" aria-label="ปิดเมนู">ปิด</button>
+      </div>
+
+      <a href="#services" onclick="toggleDrawer(false)">บริการด่วน</a>
+      <a href="#student" onclick="toggleDrawer(false)">สำหรับนักศึกษา</a>
+      <a href="#admissions" onclick="toggleDrawer(false)">สมัครเรียน & การเงิน</a>
+      <a href="#labs" onclick="toggleDrawer(false)">แหล่งฝึก & ศูนย์ปฏิบัติการ</a>
+      <a href="#showcase" onclick="toggleDrawer(false)">ผลงาน & ความภาคภูมิใจ</a>
+      <a href="#network" onclick="toggleDrawer(false)">เครือข่าย & วิเทศสัมพันธ์</a>
+      <a href="#about" onclick="toggleDrawer(false)">เกี่ยวกับคณะ</a>
+      <a href="#contact" onclick="toggleDrawer(false)">ติดต่อคณะ</a>
+
+      <div class="stack-12" style="margin-top:auto;">
+        <button class="btn primary" onclick="openModal('สมัครเรียน', templates.admissions)">สมัครเรียน</button>
+        <button class="btn" onclick="openModal('ชำระค่าเทอม', templates.tuition)">ชำระค่าเทอม</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="container">
+      <div class="topbar-inner">
+        <div class="brand">
+          <div class="brand-badge" aria-hidden="true"></div>
+          <div class="brand-title">
+            <strong>คณะวิทยาการจัดการ</strong>
+            <span>Student Service Portal</span>
+          </div>
+        </div>
+
+        <nav class="nav" aria-label="เมนูหลัก">
+          <a href="#services">บริการด่วน</a>
+          <a href="#student">สำหรับนักศึกษา</a>
+          <a href="#labs">แหล่งฝึก</a>
+          <a href="#showcase">ผลงาน</a>
+          <a href="#network">เครือข่าย</a>
+          <a href="#about">เกี่ยวกับคณะ</a>
+          <a href="#contact">ติดต่อ</a>
+        </nav>
+
+        <div class="search" role="search" aria-label="ค้นหา">
+          <span aria-hidden="true">⌕</span>
+          <input id="searchInput" type="search" placeholder="ค้นหา: ข่าว / กิจกรรม / บริการ / แบบฟอร์ม (กด Ctrl+K)" />
+          <span class="kbd">Ctrl K</span>
+        </div>
+
+        <div class="actions">
+          <button class="btn primary" id="btnApply">สมัครเรียน</button>
+          <button class="btn" id="btnHelp">ขอความช่วยเหลือ</button>
+          <button class="hamburger" onclick="toggleDrawer(true)" aria-label="เปิดเมนู">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-card">
+          <div class="hero-body stack-16">
+            <div class="pill">บริการนักศึกษาเป็นศูนย์กลาง • ข่าว • กิจกรรม • แหล่งฝึก • เครือข่าย</div>
+            <div class="stack-8">
+              <h1 class="hero-title">เว็บไซต์คณะสำหรับ “ลูกค้าคณะ” โดยเฉพาะนักศึกษา</h1>
+              <p class="hero-sub">
+                เข้าถึงบริการสำคัญได้ภายใน 2 คลิก พร้อมข้อมูลที่อัปเดตต่อเนื่อง
+                ในโทนสีม่วงอ่อนที่ดูทันสมัยและมีความเป็นบริหารธุรกิจ
+              </p>
+            </div>
+            <div class="hero-cta">
+              <button class="btn primary" onclick="scrollToId('services')">เริ่มจากบริการด่วน</button>
+              <button class="btn" onclick="scrollToId('student')">ดูข่าว/ประกาศนักศึกษา</button>
+              <button class="btn ghost" onclick="openModal('สารจากคณบดี', templates.deanMessage)">สารจากคณบดี</button>
+            </div>
+          </div>
+        </div>
+
+        <aside class="hero-aside" aria-label="ประกาศเร่งด่วน">
+          <div class="aside-title">
+            <strong>ประกาศสำคัญ</strong>
+            <small id="today"></small>
+          </div>
+          <ul class="mini-list" id="urgentList"></ul>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Services -->
+  <section class="section" id="services">
+    <div class="container">
+      <div class="section-head">
+        <div class="stack-8">
+          <h2>บริการด่วน (Quick Services)</h2>
+          <p>เมนูที่นักศึกษาต้องใช้บ่อย วางไว้หน้าแรกให้ชัดเจน</p>
+        </div>
+        <div class="row wrap">
+          <span class="chip" onclick="openModal('รวมลิงก์ระบบ', templates.systemLinks)">รวมลิงก์ระบบ</span>
+          <span class="chip" onclick="openModal('แบบฟอร์ม/ดาวน์โหลด', templates.downloads)">แบบฟอร์ม/ดาวน์โหลด</span>
+        </div>
+      </div>
+
+      <div class="quick-grid" id="quickGrid"></div>
+    </div>
+  </section>
+
+  <!-- Student Focus Area -->
+  <section class="section" id="student">
+    <div class="container">
+      <div class="grid-2">
+        <!-- Student News -->
+        <div class="panel">
+          <div class="panel-head">
+            <h3>ข่าว/ประกาศนักศึกษา</h3>
+            <div class="tools">
+              <span class="chip" onclick="filterNews('ทั้งหมด')">ทั้งหมด</span>
+              <span class="chip" onclick="filterNews('ประกาศ')">ประกาศ</span>
+              <span class="chip" onclick="filterNews('ทุน/โอกาส')">ทุน/โอกาส</span>
+            </div>
+          </div>
+          <div class="panel-body">
+            <ul class="list" id="newsList"></ul>
+          </div>
+        </div>
+
+        <!-- Activities -->
+        <div class="panel" id="admissions">
+          <div class="panel-head">
+            <h3>กิจกรรมนักศึกษา (Upcoming)</h3>
+            <div class="tools">
+              <span class="chip" onclick="openModal('ปฏิทินกิจกรรม', templates.calendar)">ปฏิทิน</span>
+              <span class="chip" onclick="filterActivities('ทั้งหมด')">ทั้งหมด</span>
+            </div>
+          </div>
+          <div class="panel-body">
+            <ul class="list" id="activityList"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Labs / Practice Centers -->
+  <section class="section" id="labs">
+    <div class="container">
+      <div class="section-head">
+        <div class="stack-8">
+          <h2>แหล่งฝึก & ศูนย์ปฏิบัติการ</h2>
+          <p>พื้นที่เรียนรู้เชิงปฏิบัติ เพื่อเสริมทักษะการทำงานจริง</p>
+        </div>
+        <div class="row wrap">
+          <span class="chip" onclick="openModal('แนวทางการนำเสนอแหล่งฝึก', templates.practiceGuide)">แนวทางนำเสนอ</span>
+        </div>
+      </div>
+
+      <div class="showcase" id="labGrid"></div>
+    </div>
+  </section>
+
+  <!-- Showcase -->
+  <section class="section" id="showcase">
+    <div class="container">
+      <div class="section-head">
+        <div class="stack-8">
+          <h2>ผลงาน & ความภาคภูมิใจ</h2>
+          <p>ผลงานนักศึกษา ผลงานอาจารย์ และกิจกรรมบริการวิชาการ</p>
+        </div>
+        <div class="row wrap">
+          <span class="chip" onclick="filterShowcase('นักศึกษา')">นักศึกษา</span>
+          <span class="chip" onclick="filterShowcase('อาจารย์')">อาจารย์</span>
+          <span class="chip" onclick="filterShowcase('บริการวิชาการ')">บริการวิชาการ</span>
+        </div>
+      </div>
+
+      <div class="showcase" id="showcaseGrid"></div>
+    </div>
+  </section>
+
+  <!-- Network / International -->
+  <section class="section" id="network">
+    <div class="container">
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-head">
+            <h3>เครือข่ายความร่วมมือ (MOU/Partners)</h3>
+            <div class="tools">
+              <span class="chip" onclick="openModal('ตัวอย่างหน้าเครือข่าย', templates.network)">ตัวอย่างหน้า</span>
+            </div>
+          </div>
+          <div class="panel-body">
+            <ul class="list" id="partnerList"></ul>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h3>คลิปสั้น 1 นาที (ตัวอย่างโมดูล)</h3>
+            <div class="tools">
+              <span class="chip" onclick="openModal('แนวทางคลิปสั้น', templates.shortVideo)">แนวทาง</span>
+            </div>
+          </div>
+          <div class="panel-body">
+            <ul class="list" id="shortsList"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="section" id="about">
+    <div class="container">
+      <div class="panel">
+        <div class="panel-head">
+          <h3>เกี่ยวกับคณะ</h3>
+          <div class="tools">
+            <span class="chip" onclick="openModal('โครงสร้างเว็บไซต์ (Site Map)', templates.sitemap)">Site Map</span>
+            <span class="chip" onclick="openModal('แนวทางโครงสร้างหน้าแรก', templates.homeLayout)">Homepage Layout</span>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="stack-12">
+            <p class="muted">
+              เว็บต้นแบบนี้ออกแบบให้ “นักศึกษาเป็นศูนย์กลาง” พร้อมโครงสร้างที่รองรับการขยายในอนาคต
+              เช่น ไทย/อังกฤษ, ระบบถาม-ตอบ, และการเชื่อมต่อฐานข้อมูลข่าว/กิจกรรมจากระบบหลังบ้าน
+            </p>
+            <div class="row wrap">
+              <button class="btn primary" onclick="openModal('สมัครเรียน & การเงิน', templates.admissions)">สมัครเรียน & การเงิน</button>
+              <button class="btn" onclick="openModal('บริการนักศึกษา', templates.studentServices)">บริการนักศึกษา</button>
+              <button class="btn" onclick="openModal('แหล่งฝึก/ศูนย์ปฏิบัติการ', templates.practiceCenters)">แหล่งฝึก/ศูนย์ปฏิบัติการ</button>
+              <button class="btn" onclick="openModal('ติดต่อคณะ', templates.contact)">ติดต่อคณะ</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer / Contact -->
+  <footer id="contact">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="stack-12">
+          <div class="row" style="gap:10px;">
+            <div class="brand-badge" aria-hidden="true" style="width:34px;height:34px;border-radius:12px;"></div>
+            <div class="stack-8">
+              <strong style="font-size:14px;">คณะวิทยาการจัดการ</strong>
+              <span class="tiny">มหาวิทยาลัยราชภัฏยะลา</span>
+            </div>
+          </div>
+          <div class="muted">
+            ช่องทางติดต่อ (ตัวอย่าง): โทร. 0XX-XXX-XXXX • อีเมล: fms@yru.ac.th • Facebook/YouTube/TikTok: @FMSYRU
+          </div>
+          <div class="tiny">
+            หมายเหตุ: เปลี่ยนข้อมูลติดต่อ ลิงก์ และชุดข้อมูลตัวอย่างในไฟล์นี้ได้ทันทีโดยแก้ในส่วน “DATA” ของ JavaScript
+          </div>
+        </div>
+
+        <div class="stack-12">
+          <strong style="font-size:14px;">ลิงก์สำคัญ</strong>
+          <div class="row wrap">
+            <a class="chip" href="#services">บริการด่วน</a>
+            <a class="chip" href="#student">ข่าว/กิจกรรม</a>
+            <a class="chip" href="#labs">แหล่งฝึก</a>
+            <a class="chip" href="#network">เครือข่าย</a>
+            <span class="chip" onclick="openModal('FAQ นักศึกษา', templates.faq)">FAQ นักศึกษา</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal -->
+  <div class="modal" id="modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-label="รายละเอียด">
+      <div class="modal-head">
+        <strong id="modalTitle">รายละเอียด</strong>
+        <button class="modal-close" onclick="closeModal()" aria-label="ปิดหน้าต่าง">ปิด</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <script>
+    /**********************
+     * UTILITIES
+     **********************/
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => document.querySelectorAll(sel);
+
+    function scrollToId(id){
+      const el = document.getElementById(id);
+      if(!el) return;
+      el.scrollIntoView({behavior:"smooth", block:"start"});
+    }
+
+    function toggleDrawer(open){
+      const drawer = $("#drawer");
+      drawer.classList.toggle("open", !!open);
+      drawer.setAttribute("aria-hidden", open ? "false" : "true");
+    }
+
+    function openModal(title, html){
+      $("#modalTitle").textContent = title || "รายละเอียด";
+      $("#modalBody").innerHTML = html || "<p>ยังไม่มีรายละเอียด</p>";
+      $("#modal").classList.add("open");
+      $("#modal").setAttribute("aria-hidden","false");
+    }
+
+    function closeModal(){
+      $("#modal").classList.remove("open");
+      $("#modal").setAttribute("aria-hidden","true");
+    }
+
+    // Close modal on background click
+    $("#modal").addEventListener("click", (e)=>{
+      if(e.target.id === "modal") closeModal();
+    });
+
+    // Close drawer on background click
+    $("#drawer").addEventListener("click", (e)=>{
+      if(e.target.id === "drawer") toggleDrawer(false);
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener("keydown", (e)=>{
+      if(e.key === "Escape"){
+        closeModal();
+        toggleDrawer(false);
+      }
+      if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k"){
+        e.preventDefault();
+        $("#searchInput")?.focus();
+      }
+    });
+
+    /**********************
+     * DATA (แก้ตรงนี้ได้)
+     **********************/
+    const DATA = {
+      urgent: [
+        { title:"ประกาศลงทะเบียนเรียน/เพิ่ม-ถอนรายวิชา", date:"สัปดาห์ที่ 1 ของภาคการศึกษา", level:"warn" },
+        { title:"กำหนดชำระค่าธรรมเนียมการศึกษา", date:"ภายในวันที่กำหนดของมหาวิทยาลัย", level:"warn" },
+        { title:"สมัครทุน/โอกาสพิเศษ", date:"เปิดรับเป็นรอบ ๆ", level:"ok" }
+      ],
+      quickServices: [
+        { icon:"🎓", title:"สมัครเรียน", desc:"รายละเอียดหลักสูตร/การรับสมัคร", modal:"สมัครเรียน & หลักสูตร", contentKey:"admissions" },
+        { icon:"💳", title:"ชำระค่าเทอม", desc:"ช่องทาง/ขั้นตอน/หลักฐาน", modal:"การชำระค่าเทอม", contentKey:"tuition" },
+        { icon:"🗓️", title:"ปฏิทินการศึกษา", desc:"วันสำคัญ/กำหนดการ", modal:"ปฏิทินการศึกษา", contentKey:"calendar" },
+        { icon:"📄", title:"ดาวน์โหลด", desc:"แบบฟอร์ม/คำร้อง/เอกสาร", modal:"แบบฟอร์ม/ดาวน์โหลด", contentKey:"downloads" },
+        { icon:"🏢", title:"แหล่งฝึก", desc:"ศูนย์ธุรกิจ/Lab/ฝึกปฏิบัติ", modal:"แหล่งฝึก & ศูนย์ปฏิบัติการ", contentKey:"practiceCenters" },
+        { icon:"🆘", title:"ช่วยเหลือ/ติดต่อ", desc:"ช่องทางติดต่อ/คำถามพบบ่อย", modal:"ติดต่อ/ขอความช่วยเหลือ", contentKey:"contact" }
+      ],
+      news: [
+        { title:"ประกาศ: เปิดยื่นคำร้องขอเอกสารรับรองนักศึกษา", type:"ประกาศ", date:"อัปเดตล่าสุด", tags:["เอกสาร","บริการนักศึกษา"] },
+        { title:"ทุน/โอกาส: รับสมัครนักศึกษาเข้าร่วมโครงการฝึกงาน/Co-op", type:"ทุน/โอกาส", date:"ภายในเดือนนี้", tags:["ทุน","ฝึกงาน"] },
+        { title:"ข่าว: กิจกรรมพัฒนาทักษะภาษาอังกฤษเพื่อการทำงาน", type:"ข่าว", date:"สัปดาห์หน้า", tags:["ภาษาอังกฤษ","พัฒนาทักษะ"] },
+        { title:"ประกาศ: แนวทางการเข้าร่วมกิจกรรมนักศึกษาและการเก็บชั่วโมง", type:"ประกาศ", date:"ตลอดภาคการศึกษา", tags:["กิจกรรม","ชั่วโมงกิจกรรม"] }
+      ],
+      activities: [
+        { title:"เวิร์กช็อป: การทำเรซูเม่และสัมภาษณ์งาน", date:"เสาร์ที่ 1 ของเดือน", place:"ห้องประชุม/Online", status:"เปิดรับ", tags:["อาชีพ","ทักษะ"] },
+        { title:"กิจกรรม: เปิดบ้านศูนย์ธุรกิจ/แหล่งฝึกปฏิบัติ", date:"สัปดาห์ที่ 2", place:"ศูนย์ธุรกิจคณะ", status:"กำลังเตรียม", tags:["แหล่งฝึก","เยี่ยมชม"] },
+        { title:"กิจกรรม: เสริมทักษะการสื่อสารและการนำเสนอ", date:"สัปดาห์ที่ 3", place:"ห้องปฏิบัติการ", status:"เปิดรับ", tags:["Soft Skills"] }
+      ],
+      labs: [
+        { title:"ศูนย์ธุรกิจ/ห้องปฏิบัติการค้าปลีก", desc:"เรียนรู้การบริหารร้าน การจัดการสินค้า และบริการลูกค้า", tag:"Business Lab" },
+        { title:"ห้องปฏิบัติการการเงินและการประกันภัย", desc:"ฝึกทักษะการเงิน การวิเคราะห์ และการบริการด้านประกันภัย", tag:"Finance" },
+        { title:"Lab การตลาดดิจิทัลและคอนเทนต์", desc:"ฝึกสร้างคอนเทนต์ โฆษณา และวิเคราะห์ข้อมูลผู้ชม", tag:"Digital Marketing" }
+      ],
+      showcase: [
+        { title:"ผลงานนักศึกษา: โครงการพัฒนาธุรกิจชุมชน", desc:"นำเสนอแนวคิด/ต้นแบบที่ใช้งานได้จริง", group:"นักศึกษา" },
+        { title:"ผลงานอาจารย์: งานวิจัย/บทความวิชาการ", desc:"ขับเคลื่อนองค์ความรู้ด้านบริหารธุรกิจและการจัดการ", group:"อาจารย์" },
+        { title:"บริการวิชาการ: พัฒนาผู้ประกอบการท้องถิ่น", desc:"อบรม ให้คำปรึกษา และต่อยอดผลิตภัณฑ์ชุมชน", group:"บริการวิชาการ" }
+      ],
+      partners: [
+        { title:"เครือข่ายต่างประเทศ", meta:"MOU/Exchange/Joint Activities", note:"เชื่อมความร่วมมือเพื่อการเรียนรู้และประสบการณ์สากล" },
+        { title:"เครือข่ายสถานประกอบการ", meta:"แหล่งฝึก/สหกิจ/งานร่วม", note:"สร้างโอกาสฝึกปฏิบัติและการมีงานทำ" },
+        { title:"เครือข่ายชุมชน", meta:"บริการวิชาการ/โครงการพัฒนา", note:"ขยายผลเชิงสังคมและเศรษฐกิจพื้นที่" }
+      ],
+      shorts: [
+        { title:"คลิป: แนะนำหลักสูตร/จุดเด่นการเรียน", meta:"ความยาว 45–60 วินาที", note:"ใช้แนวตั้ง พร้อมคำบรรยาย" },
+        { title:"คลิป: ผลงานนักศึกษา/กิจกรรมเด่น", meta:"ความยาว 30–60 วินาที", note:"เน้นก่อน-หลัง/ไฮไลต์" },
+        { title:"คลิป: แหล่งฝึก/ศูนย์ธุรกิจ", meta:"ความยาว 30–60 วินาที", note:"ถ่ายมุมกิจกรรมจริง + Call to Action" }
+      ]
+    };
+
+    /**********************
+     * TEMPLATES (Modal content)
+     **********************/
+    const templates = {
+      sitemap: `
+        <div class="stack-12">
+          <p><b>Site Map (โครงสร้างเว็บแบบ Student-Centric)</b></p>
+          <ul>
+            <li><b>หน้าแรก:</b> บริการด่วน • ข่าว/ประกาศ นศ. • กิจกรรม • ผลงาน • คลิปสั้น • สารจากคณบดี</li>
+            <li><b>สำหรับนักศึกษา:</b> ข่าว/ประกาศ • กิจกรรม • คู่มือ/FAQ • ดาวน์โหลด • ระบบออนไลน์</li>
+            <li><b>สมัครเรียน & การเงิน:</b> หลักสูตร • สมัครเรียน • ค่าเทอม/การชำระ • FAQ</li>
+            <li><b>แหล่งฝึก & ศูนย์ปฏิบัติการ:</b> ศูนย์ธุรกิจ/Lab • แหล่งฝึก • เครือข่ายสถานประกอบการ</li>
+            <li><b>ผลงาน & ความภาคภูมิใจ:</b> นักศึกษา • อาจารย์ • บริการวิชาการ</li>
+            <li><b>เครือข่าย & วิเทศสัมพันธ์:</b> MOU • เครือข่ายชุมชน • เครือข่ายต่างประเทศ</li>
+            <li><b>เกี่ยวกับคณะ:</b> สารจากคณบดี • โครงสร้างการบริหาร • ติดต่อ</li>
+          </ul>
+        </div>
+      `,
+      homeLayout: `
+        <div class="stack-12">
+          <p><b>โครงสร้างหน้าแรก (Homepage Layout)</b></p>
+          <ol>
+            <li>Hero + Call-to-Action (สมัครเรียน/บริการ)</li>
+            <li>Quick Services (ไอคอน 6 เมนู)</li>
+            <li>ข่าว/ประกาศนักศึกษา</li>
+            <li>กิจกรรมนักศึกษา (Upcoming)</li>
+            <li>แหล่งฝึก & ศูนย์ปฏิบัติการ</li>
+            <li>ผลงาน & ความภาคภูมิใจ</li>
+            <li>เครือข่าย & วิเทศสัมพันธ์</li>
+            <li>คลิปสั้น 1 นาที (โมดูล)</li>
+          </ol>
+          <p class="muted">แนวทาง: เน้น Mobile-First, สแกนง่าย, ข้อมูลนักศึกษาต้องเด่นกว่าเนื้อหาอื่น</p>
+        </div>
+      `,
+      admissions: `
+        <div class="stack-12">
+          <p><b>สมัครเรียน & หลักสูตร</b></p>
+          <ul>
+            <li>หลักสูตรระดับปริญญาตรี/บัณฑิตศึกษา (แยกตามสาขา)</li>
+            <li>ขั้นตอนสมัครเรียน (Timeline + เอกสาร)</li>
+            <li>ช่องทางสมัคร (ลิงก์/QR)</li>
+            <li>FAQ: คุณสมบัติ/ค่าธรรมเนียม/ทุน/กำหนดการ</li>
+          </ul>
+          <p class="tiny">หมายเหตุ: เชื่อมหน้า Landing เฉพาะช่วงรับสมัครเพื่อเพิ่ม Conversion</p>
+        </div>
+      `,
+      tuition: `
+        <div class="stack-12">
+          <p><b>การชำระค่าเทอม</b></p>
+          <ul>
+            <li>ช่องทางชำระเงิน (ตัวอย่าง): เคาน์เตอร์/ธนาคาร/ออนไลน์</li>
+            <li>วิธีตรวจสอบสถานะการชำระ</li>
+            <li>การขอใบเสร็จ/เอกสารการเงิน</li>
+            <li>ติดต่อเจ้าหน้าที่การเงิน (เบอร์/ไลน์/อีเมล)</li>
+          </ul>
+        </div>
+      `,
+      calendar: `
+        <div class="stack-12">
+          <p><b>ปฏิทินการศึกษา/ปฏิทินกิจกรรม</b></p>
+          <ul>
+            <li>ลงทะเบียนเรียน/เพิ่ม-ถอน</li>
+            <li>ชำระค่าธรรมเนียม</li>
+            <li>สอบกลางภาค/ปลายภาค</li>
+            <li>กิจกรรมคณะ/กิจกรรมสาขา</li>
+          </ul>
+        </div>
+      `,
+      downloads: `
+        <div class="stack-12">
+          <p><b>แบบฟอร์ม/ดาวน์โหลด</b></p>
+          <ul>
+            <li>คำร้องทั่วไป (PDF/Word)</li>
+            <li>แบบฟอร์มขอหนังสือรับรอง</li>
+            <li>แบบฟอร์มฝึกงาน/สหกิจ</li>
+            <li>คู่มือนักศึกษา</li>
+          </ul>
+          <p class="tiny">แนะนำ: จัดหมวดและมีช่องค้นหาในหน้านี้</p>
+        </div>
+      `,
+      systemLinks: `
+        <div class="stack-12">
+          <p><b>รวมลิงก์ระบบ (ตัวอย่าง)</b></p>
+          <ul>
+            <li>ระบบทะเบียน/ผลการเรียน</li>
+            <li>ระบบชำระเงิน</li>
+            <li>ระบบประกันคุณภาพ/กิจกรรม</li>
+            <li>อีเมลนักศึกษา/บัญชีผู้ใช้</li>
+          </ul>
+        </div>
+      `,
+      practiceCenters: `
+        <div class="stack-12">
+          <p><b>แหล่งฝึก & ศูนย์ปฏิบัติการ</b></p>
+          <ul>
+            <li>ศูนย์ธุรกิจคณะ / ห้องปฏิบัติการ (ภาพ+คลิป)</li>
+            <li>ตาราง/รูปแบบการเข้าใช้</li>
+            <li>บุคลากร/ผู้ประสานงาน</li>
+            <li>กิจกรรมฝึกปฏิบัติและผลงานที่เกิดขึ้น</li>
+          </ul>
+        </div>
+      `,
+      practiceGuide: `
+        <div class="stack-12">
+          <p><b>แนวทางการนำเสนอ “แหล่งฝึก” ให้ดูทันสมัย</b></p>
+          <ol>
+            <li>ใช้ภาพจริง + คลิปแนวตั้ง 30–60 วินาที</li>
+            <li>มี “What you will learn” 3–5 บรรทัด</li>
+            <li>มี “Use cases” เช่น งานที่ทำได้จริง/ทักษะที่ได้</li>
+            <li>มีปุ่ม CTA: ขอเข้าเยี่ยมชม / สมัครเข้าร่วมกิจกรรม</li>
+          </ol>
+        </div>
+      `,
+      network: `
+        <div class="stack-12">
+          <p><b>ตัวอย่างหน้าเครือข่าย & วิเทศสัมพันธ์</b></p>
+          <ul>
+            <li>แยกเป็น 3 กลุ่ม: ต่างประเทศ / สถานประกอบการ / ชุมชน</li>
+            <li>แต่ละเครือข่ายมี: ชื่อหน่วยงาน • ประเภทความร่วมมือ • กิจกรรมล่าสุด</li>
+            <li>มี “Story” และภาพกิจกรรม เพื่อความน่าเชื่อถือ</li>
+          </ul>
+        </div>
+      `,
+      shortVideo: `
+        <div class="stack-12">
+          <p><b>แนวทางคลิปสั้น 1 นาที</b></p>
+          <ul>
+            <li>โครง: Hook 3 วิ → เนื้อหา 40 วิ → CTA 10 วิ</li>
+            <li>ใส่คำบรรยายทุกคลิป (คนดูแบบปิดเสียงได้)</li>
+            <li>ใช้ Key Visual โทนม่วงอ่อน + โลโก้คณะ</li>
+            <li>หมวดคลิป: หลักสูตร / ผลงาน / กิจกรรม / แหล่งฝึก / เครือข่าย</li>
+          </ul>
+        </div>
+      `,
+      deanMessage: `
+        <div class="stack-12">
+          <p><b>สารจากคณบดี (ตัวอย่างข้อความ)</b></p>
+          <p class="muted">ยินดีต้อนรับทุกท่านสู่คณะวิทยาการจัดการ เรามุ่งพัฒนานักศึกษาให้มีสมรรถนะด้านบริหารธุรกิจ
+          พร้อมทักษะเชิงปฏิบัติและความเป็นมืออาชีพ เพื่อก้าวสู่โลกการทำงานอย่างมั่นใจ</p>
+        </div>
+      `,
+      studentServices: `
+        <div class="stack-12">
+          <p><b>บริการนักศึกษา</b></p>
+          <ul>
+            <li>ข่าว/ประกาศที่เกี่ยวข้องกับการเรียน</li>
+            <li>ดาวน์โหลดแบบฟอร์ม/คำร้อง</li>
+            <li>ช่องทางติดต่อเจ้าหน้าที่</li>
+            <li>FAQ ที่ถามบ่อย</li>
+          </ul>
+        </div>
+      `,
+      contact: `
+        <div class="stack-12">
+          <p><b>ติดต่อ/ขอความช่วยเหลือ</b></p>
+          <ul>
+            <li>ฝ่ายงาน (การเงิน/วิชาการ/พัฒนานักศึกษา) + ช่องทางติดต่อ</li>
+            <li>เวลาทำการ</li>
+            <li>แผนที่/การเดินทาง</li>
+            <li>ช่องทาง Social</li>
+          </ul>
+        </div>
+      `,
+      faq: `
+        <div class="stack-12">
+          <p><b>FAQ นักศึกษา</b></p>
+          <ul>
+            <li>ขอหนังสือรับรองทำอย่างไร?</li>
+            <li>เพิ่ม-ถอนรายวิชา ต้องทำภายในช่วงไหน?</li>
+            <li>ชำระค่าเทอมแล้วตรวจสอบสถานะอย่างไร?</li>
+            <li>สมัครฝึกงาน/สหกิจต้องใช้เอกสารอะไรบ้าง?</li>
+          </ul>
+        </div>
+      `
+    };
+
+    /**********************
+     * RENDERERS
+     **********************/
+    function renderUrgent(){
+      const ul = $("#urgentList");
+      ul.innerHTML = "";
+      DATA.urgent.forEach(u=>{
+        const li = document.createElement("li");
+        li.className = "mini-item";
+        li.innerHTML = `
+          <strong>${escapeHtml(u.title)}</strong>
+          <span>${escapeHtml(u.date)} • <span class="badge ${u.level==="warn"?"warn":""}">${u.level==="warn"?"ควรทราบ":"แนะนำ"}</span></span>
+        `;
+        ul.appendChild(li);
+      });
+    }
+
+    function renderQuickServices(){
+      const grid = $("#quickGrid");
+      grid.innerHTML = "";
+      DATA.quickServices.forEach(s=>{
+        const div = document.createElement("div");
+        div.className = "qcard";
+        div.tabIndex = 0;
+        div.setAttribute("role","button");
+        div.setAttribute("aria-label", s.title);
+        div.innerHTML = `
+          <div class="icon" aria-hidden="true">${s.icon}</div>
+          <div class="stack-8">
+            <b>${escapeHtml(s.title)}</b>
+            <small>${escapeHtml(s.desc)}</small>
+          </div>
+        `;
+        const open = ()=> openModal(s.modal || s.title, templates[s.contentKey] || "<p>ยังไม่มีรายละเอียด</p>");
+        div.addEventListener("click", open);
+        div.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" ") { e.preventDefault(); open(); }});
+        grid.appendChild(div);
+      });
+    }
+
+    let newsFilter = "ทั้งหมด";
+    function filterNews(type){
+      newsFilter = type;
+      renderNews();
+    }
+
+    function renderNews(){
+      const ul = $("#newsList");
+      ul.innerHTML = "";
+      const list = DATA.news.filter(n => newsFilter==="ทั้งหมด" ? true : n.type===newsFilter);
+
+      list.forEach(n=>{
+        const li = document.createElement("li");
+        li.className = "item";
+        li.innerHTML = `
+          <div class="stack-8">
+            <strong style="font-size:13px;">${escapeHtml(n.title)}</strong>
+            <div class="meta">
+              <span class="tag">${escapeHtml(n.type)}</span>
+              <span>${escapeHtml(n.date)}</span>
+              ${n.tags?.slice(0,2).map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join("") || ""}
+            </div>
+          </div>
+        `;
+        li.addEventListener("click", ()=>{
+          openModal("รายละเอียดข่าว/ประกาศ", `
+            <div class="stack-12">
+              <p><b>${escapeHtml(n.title)}</b></p>
+              <p class="muted">ประเภท: ${escapeHtml(n.type)} • ${escapeHtml(n.date)}</p>
+              <p class="muted">หมายเหตุ: ใส่รายละเอียดจริง/แนบไฟล์/ลิงก์ระบบได้ในโมดูลนี้</p>
+              <div class="row wrap">
+                <button class="btn primary" onclick="alert('ตัวอย่าง: เปิดลิงก์/ดาวน์โหลดเอกสาร')">ดำเนินการ</button>
+                <button class="btn" onclick="closeModal()">ปิด</button>
+              </div>
+            </div>
+          `);
+        });
+        ul.appendChild(li);
+      });
+
+      if(list.length===0){
+        ul.innerHTML = `<li class="item"><strong style="font-size:13px;">ไม่พบข่าวตามตัวกรอง</strong><div class="meta"><span>ลองเลือก “ทั้งหมด”</span></div></li>`;
+      }
+    }
+
+    let activityFilter = "ทั้งหมด";
+    function filterActivities(type){
+      activityFilter = type;
+      renderActivities();
+    }
+
+    function renderActivities(){
+      const ul = $("#activityList");
+      ul.innerHTML = "";
+      const list = DATA.activities.filter(a => activityFilter==="ทั้งหมด" ? true : true);
+
+      list.forEach(a=>{
+        const li = document.createElement("li");
+        li.className = "item";
+        const badgeClass = a.status.includes("เปิดรับ") ? "" : "warn";
+        const badgeText = a.status.includes("เปิดรับ") ? "เปิดรับ" : "กำลังเตรียม";
+        li.innerHTML = `
+          <div class="stack-8">
+            <strong style="font-size:13px;">${escapeHtml(a.title)}</strong>
+            <div class="meta">
+              <span class="badge ${badgeClass}">${badgeText}</span>
+              <span>${escapeHtml(a.date)}</span>
+              <span class="tag">${escapeHtml(a.place)}</span>
+              ${a.tags?.slice(0,2).map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join("") || ""}
+            </div>
+          </div>
+        `;
+        li.addEventListener("click", ()=>{
+          openModal("รายละเอียดกิจกรรม", `
+            <div class="stack-12">
+              <p><b>${escapeHtml(a.title)}</b></p>
+              <p class="muted">เวลา: ${escapeHtml(a.date)} • สถานที่: ${escapeHtml(a.place)}</p>
+              <p class="muted">สถานะ: ${escapeHtml(a.status)}</p>
+              <p class="muted">หมายเหตุ: เพิ่มปุ่มลงทะเบียน/แผนที่/QR ได้ตามระบบจริง</p>
+              <div class="row wrap">
+                <button class="btn primary" onclick="alert('ตัวอย่าง: ลงทะเบียนกิจกรรม')">ลงทะเบียน</button>
+                <button class="btn" onclick="closeModal()">ปิด</button>
+              </div>
+            </div>
+          `);
+        });
+        ul.appendChild(li);
+      });
+    }
+
+    function renderLabs(){
+      const grid = $("#labGrid");
+      grid.innerHTML = "";
+      DATA.labs.forEach(l=>{
+        const card = document.createElement("div");
+        card.className = "s-card";
+        card.innerHTML = `
+          <div class="s-cover" aria-hidden="true"></div>
+          <div class="s-body stack-8">
+            <h4>${escapeHtml(l.title)}</h4>
+            <p>${escapeHtml(l.desc)}</p>
+            <div class="meta" style="margin-top:10px;">
+              <span class="tag">${escapeHtml(l.tag)}</span>
+              <span class="tag">ดูรายละเอียด</span>
+            </div>
+          </div>
+        `;
+        card.addEventListener("click", ()=>{
+          openModal("รายละเอียดแหล่งฝึก/ศูนย์ปฏิบัติการ", `
+            <div class="stack-12">
+              <p><b>${escapeHtml(l.title)}</b></p>
+              <p class="muted">${escapeHtml(l.desc)}</p>
+              <ul>
+                <li>What you will learn: 3–5 ประเด็น</li>
+                <li>ตารางการใช้ห้อง/ผู้ประสานงาน</li>
+                <li>ภาพ/คลิปกิจกรรมจริง</li>
+              </ul>
+              <div class="row wrap">
+                <button class="btn primary" onclick="alert('ตัวอย่าง: ขอเข้าเยี่ยมชม/จองรอบ')">ขอเข้าเยี่ยมชม</button>
+                <button class="btn" onclick="closeModal()">ปิด</button>
+              </div>
+            </div>
+          `);
+        });
+        grid.appendChild(card);
+      });
+    }
+
+    let showcaseFilter = "ทั้งหมด";
+    function filterShowcase(group){
+      showcaseFilter = group;
+      renderShowcase();
+    }
+
+    function renderShowcase(){
+      const grid = $("#showcaseGrid");
+      grid.innerHTML = "";
+      const list = DATA.showcase.filter(s => showcaseFilter==="ทั้งหมด" ? true : s.group===showcaseFilter);
+
+      list.forEach(s=>{
+        const card = document.createElement("div");
+        card.className = "s-card";
+        card.innerHTML = `
+          <div class="s-cover" aria-hidden="true"></div>
+          <div class="s-body stack-8">
+            <h4>${escapeHtml(s.title)}</h4>
+            <p>${escapeHtml(s.desc)}</p>
+            <div class="meta" style="margin-top:10px;">
+              <span class="tag">${escapeHtml(s.group)}</span>
+              <span class="tag">อ่านเพิ่มเติม</span>
+            </div>
+          </div>
+        `;
+        card.addEventListener("click", ()=>{
+          openModal("รายละเอียดผลงาน", `
+            <div class="stack-12">
+              <p><b>${escapeHtml(s.title)}</b></p>
+              <p class="muted">หมวด: ${escapeHtml(s.group)}</p>
+              <p class="muted">${escapeHtml(s.desc)}</p>
+              <p class="muted">หมายเหตุ: ใส่รูป/ไฟล์/ลิงก์ข่าว และทีมเจ้าของผลงานได้</p>
+            </div>
+          `);
+        });
+        grid.appendChild(card);
+      });
+
+      if(list.length===0){
+        grid.innerHTML = `<div class="s-card"><div class="s-cover"></div><div class="s-body"><h4>ไม่พบรายการ</h4><p>ลองเลือกตัวกรองอื่น</p></div></div>`;
+      }
+    }
+
+    function renderPartners(){
+      const ul = $("#partnerList");
+      ul.innerHTML = "";
+      DATA.partners.forEach(p=>{
+        const li = document.createElement("li");
+        li.className = "item";
+        li.innerHTML = `
+          <div class="stack-8">
+            <strong style="font-size:13px;">${escapeHtml(p.title)}</strong>
+            <div class="meta">
+              <span class="tag">${escapeHtml(p.meta)}</span>
+              <span>${escapeHtml(p.note)}</span>
+            </div>
+          </div>
+        `;
+        li.addEventListener("click", ()=>{
+          openModal("รายละเอียดเครือข่าย", `
+            <div class="stack-12">
+              <p><b>${escapeHtml(p.title)}</b></p>
+              <p class="muted">${escapeHtml(p.meta)}</p>
+              <p class="muted">${escapeHtml(p.note)}</p>
+              <ul>
+                <li>รายชื่อหน่วยงาน/โลโก้</li>
+                <li>รูปแบบความร่วมมือ (Exchange/Research/Service)</li>
+                <li>กิจกรรมล่าสุด + ปุ่มดูรายละเอียด</li>
+              </ul>
+            </div>
+          `);
+        });
+        ul.appendChild(li);
+      });
+    }
+
+    function renderShorts(){
+      const ul = $("#shortsList");
+      ul.innerHTML = "";
+      DATA.shorts.forEach(s=>{
+        const li = document.createElement("li");
+        li.className = "item";
+        li.innerHTML = `
+          <div class="stack-8">
+            <strong style="font-size:13px;">${escapeHtml(s.title)}</strong>
+            <div class="meta">
+              <span class="tag">${escapeHtml(s.meta)}</span>
+              <span>${escapeHtml(s.note)}</span>
+            </div>
+          </div>
+        `;
+        li.addEventListener("click", ()=>{
+          openModal("โมดูลคลิปสั้น", `
+            <div class="stack-12">
+              <p><b>${escapeHtml(s.title)}</b></p>
+              <p class="muted">${escapeHtml(s.meta)} • ${escapeHtml(s.note)}</p>
+              <p class="muted">แนะนำ: ใช้ Embedded YouTube/TikTok หรือดึงจากเพจ/ช่องทางหลักของคณะ</p>
+            </div>
+          `);
+        });
+        ul.appendChild(li);
+      });
+    }
+
+    /**********************
+     * SEARCH (client-side)
+     **********************/
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function setupSearch(){
+      const input = $("#searchInput");
+      if(!input) return;
+
+      input.addEventListener("input", ()=>{
+        const q = input.value.trim().toLowerCase();
+        if(!q){
+          // reset filters + render
+          newsFilter = "ทั้งหมด";
+          showcaseFilter = "ทั้งหมด";
+          renderNews();
+          renderActivities();
+          renderShowcase();
+          return;
+        }
+
+        // simple search across news + activities + showcase
+        const newsHits = DATA.news.filter(n => (n.title + " " + n.type + " " + (n.tags||[]).join(" ")).toLowerCase().includes(q));
+        const actHits  = DATA.activities.filter(a => (a.title + " " + a.place + " " + a.status + " " + (a.tags||[]).join(" ")).toLowerCase().includes(q));
+        const showHits = DATA.showcase.filter(s => (s.title + " " + s.group + " " + s.desc).toLowerCase().includes(q));
+
+        // Render hits
+        $("#newsList").innerHTML = hitsToList(newsHits, "news");
+        $("#activityList").innerHTML = hitsToList(actHits, "activity");
+        $("#showcaseGrid").innerHTML = hitsToCards(showHits);
+
+        // attach click handlers again for generated items
+        attachHitHandlers(newsHits, actHits, showHits);
+      });
+    }
+
+    function hitsToList(items, kind){
+      if(items.length===0){
+        return `<li class="item"><strong style="font-size:13px;">ไม่พบผลลัพธ์</strong><div class="meta"><span>ลองใช้คำค้นอื่น</span></div></li>`;
+      }
+      return items.map((x, idx)=>{
+        const t = kind==="news" ? x.type : x.status;
+        const d = kind==="news" ? x.date : x.date;
+        const meta2 = kind==="news" ? (x.tags||[]).slice(0,2) : (x.tags||[]).slice(0,2);
+        return `
+          <li class="item" data-kind="${kind}" data-idx="${idx}">
+            <div class="stack-8">
+              <strong style="font-size:13px;">${escapeHtml(x.title)}</strong>
+              <div class="meta">
+                <span class="tag">${escapeHtml(t)}</span>
+                <span>${escapeHtml(d)}</span>
+                ${meta2.map(m=>`<span class="tag">${escapeHtml(m)}</span>`).join("")}
+              </div>
+            </div>
+          </li>
+        `;
+      }).join("");
+    }
+
+    function hitsToCards(items){
+      if(items.length===0){
+        return `<div class="s-card"><div class="s-cover"></div><div class="s-body"><h4>ไม่พบผลลัพธ์</h4><p>ลองใช้คำค้นอื่น</p></div></div>`;
+      }
+      return items.map((s, idx)=>`
+        <div class="s-card" data-kind="showcase" data-idx="${idx}">
+          <div class="s-cover"></div>
+          <div class="s-body stack-8">
+            <h4>${escapeHtml(s.title)}</h4>
+            <p>${escapeHtml(s.desc)}</p>
+            <div class="meta" style="margin-top:10px;">
+              <span class="tag">${escapeHtml(s.group)}</span>
+              <span class="tag">อ่านเพิ่มเติม</span>
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function attachHitHandlers(newsHits, actHits, showHits){
+      $$("#newsList .item[data-kind='news']").forEach((el)=>{
+        el.addEventListener("click", ()=>{
+          const idx = Number(el.getAttribute("data-idx"));
+          const n = newsHits[idx];
+          openModal("รายละเอียดข่าว/ประกาศ", `
+            <div class="stack-12">
+              <p><b>${escapeHtml(n.title)}</b></p>
+              <p class="muted">ประเภท: ${escapeHtml(n.type)} • ${escapeHtml(n.date)}</p>
+              <p class="muted">หมายเหตุ: ใส่รายละเอียดจริง/แนบไฟล์/ลิงก์ระบบได้ในโมดูลนี้</p>
+            </div>
+          `);
+        });
+      });
+
+      $$("#activityList .item[data-kind='activity']").forEach((el)=>{
+        el.addEventListener("click", ()=>{
+          const idx = Number(el.getAttribute("data-idx"));
+          const a = actHits[idx];
+          openModal("รายละเอียดกิจกรรม", `
+            <div class="stack-12">
+              <p><b>${escapeHtml(a.title)}</b></p>
+              <p class="muted">เวลา: ${escapeHtml(a.date)} • สถานที่: ${escapeHtml(a.place)}</p>
+              <p class="muted">สถานะ: ${escapeHtml(a.status)}</p>
+            </div>
+          `);
+        });
+      });
+
+      $$("#showcaseGrid .s-card[data-kind='showcase']").forEach((el)=>{
+        el.addEventListener("click", ()=>{
+          const idx = Number(el.getAttribute("data-idx"));
+          const s = showHits[idx];
+          openModal("รายละเอียดผลงาน", `
+            <div class="stack-12">
+              <p><b>${escapeHtml(s.title)}</b></p>
+              <p class="muted">หมวด: ${escapeHtml(s.group)}</p>
+              <p class="muted">${escapeHtml(s.desc)}</p>
+            </div>
+          `);
+        });
+      });
+    }
+
+    /**********************
+     * INIT
+     **********************/
+    function init(){
+      // date
+      const d = new Date();
+      $("#today").textContent = d.toLocaleDateString("th-TH", { year:"numeric", month:"short", day:"numeric" });
+
+      renderUrgent();
+      renderQuickServices();
+      renderNews();
+      renderActivities();
+      renderLabs();
+      renderShowcase();
+      renderPartners();
+      renderShorts();
+      setupSearch();
+
+      // Buttons
+      $("#btnApply").addEventListener("click", ()=> openModal("สมัครเรียน & หลักสูตร", templates.admissions));
+      $("#btnHelp").addEventListener("click", ()=> openModal("ติดต่อ/ขอความช่วยเหลือ", templates.contact));
+    }
+
+    init();
+  </script>
+</body>
+</html>
