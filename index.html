@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>คณะวิทยาการจัดการ — Student Service Portal</title>
-  <meta name="description" content="เว็บไซต์คณะวิทยาการจัดการ เน้นบริการนักศึกษา ข่าว กิจกรรม แหล่งฝึก และเครือข่ายความร่วมมือ" />
+  <meta name="description" content="เว็บไซต์คณะวิทยาการจัดการ เน้นบริการนักศึกษา ข่าว กิจกรรม แหล่งฝึก เครือข่าย ความร่วมมือ และ ITA" />
   <style>
     :root{
       /* Light Purple Business Tone */
@@ -98,20 +98,62 @@
     .brand-title strong{ font-size:14px; letter-spacing:.2px; }
     .brand-title span{ font-size:12px; color:var(--muted); }
 
+    /* Nav + Dropdown */
     .nav{
-      display:flex; gap: 10px; align-items:center;
+      display:flex; gap: 8px; align-items:center;
+      flex: 1;
     }
-    .nav a{
+    .nav a, .nav .nav-btn{
       font-size:13px;
       padding:10px 12px;
       border-radius: 12px;
       color: rgba(31,27,46,.86);
       transition: all .18s ease;
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+      display:inline-flex; align-items:center; gap:8px;
+      white-space: nowrap;
     }
-    .nav a:hover{
+    .nav a:hover, .nav .nav-btn:hover{
       background: rgba(170,120,255,.14);
       color: var(--text);
     }
+    .nav .caret{ font-size: 11px; opacity:.8; }
+
+    .dropdown{
+      position:relative;
+      display:inline-flex;
+    }
+    .dropdown-menu{
+      position:absolute;
+      top: 44px;
+      left: 0;
+      width: 320px;
+      background: rgba(255,255,255,.96);
+      border: 1px solid rgba(85,65,120,.14);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      padding: 10px;
+      display:none;
+      z-index: 60;
+    }
+    .dropdown.right .dropdown-menu{ left:auto; right:0; }
+    .dropdown.open .dropdown-menu{ display:block; }
+    .dd-item{
+      width:100%;
+      text-align:left;
+      padding: 10px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(85,65,120,.10);
+      background: rgba(251,249,255,.85);
+      cursor:pointer;
+      display:flex; flex-direction:column; gap:4px;
+      transition: all .16s ease;
+    }
+    .dd-item:hover{ background: rgba(229,211,255,.62); }
+    .dd-item strong{ font-size: 13px; }
+    .dd-item span{ font-size: 12px; color: var(--muted); }
 
     .actions{
       display:flex; gap:10px; align-items:center; justify-content:flex-end;
@@ -198,19 +240,28 @@
     .drawer.open{ display:block; }
     .drawer-panel{
       position:absolute; right:0; top:0; bottom:0;
-      width: min(360px, 92vw);
+      width: min(380px, 92vw);
       background: #fff;
       border-left: 1px solid var(--line);
       box-shadow: var(--shadow);
       padding: 16px;
       display:flex; flex-direction:column; gap: 12px;
+      overflow:auto;
     }
-    .drawer-panel a{
+    .drawer-panel a, .drawer-panel button{
+      width:100%;
+      text-align:left;
       padding: 12px 12px;
       border-radius: 12px;
       border: 1px solid rgba(85,65,120,.12);
       background: rgba(251,249,255,.8);
       font-size: 14px;
+      cursor:pointer;
+    }
+    .drawer-panel button.primary{
+      border-color: transparent;
+      background: linear-gradient(135deg, var(--p700), var(--p500));
+      color:#fff;
     }
 
     /* Hero */
@@ -293,7 +344,7 @@
     .mini-item strong{ display:block; font-size: 13px; }
     .mini-item span{ display:block; font-size: 12px; color: var(--muted); margin-top: 4px; }
 
-    /* Quick Services */
+    /* Sections */
     .section{ padding: 22px 0; }
     .section-head{
       display:flex; align-items:flex-end; justify-content:space-between;
@@ -316,6 +367,7 @@
       grid-template-columns: repeat(6, 1fr);
       gap: 10px;
     }
+    .quick-grid.secondary{ grid-template-columns: repeat(7, 1fr); }
     .qcard{
       border: 1px solid rgba(85,65,120,.12);
       border-radius: var(--radius2);
@@ -358,7 +410,7 @@
       background: linear-gradient(180deg, rgba(241,231,255,.65), rgba(255,255,255,.75));
     }
     .panel-head h3{ margin:0; font-size: 14px; }
-    .panel-head .tools{ display:flex; gap:8px; align-items:center; }
+    .panel-head .tools{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
     .chip{
       font-size: 12px;
       color: rgba(31,27,46,.78);
@@ -369,6 +421,7 @@
       cursor:pointer;
       user-select:none;
       transition: all .18s ease;
+      white-space:nowrap;
     }
     .chip:hover{ background: rgba(229,211,255,.68); }
 
@@ -388,6 +441,7 @@
       padding: 12px;
       background: rgba(251,249,255,.85);
       transition: all .18s ease;
+      cursor:pointer;
     }
     .item:hover{ transform: translateY(-1px); box-shadow: 0 12px 24px rgba(34,24,55,.08); }
     .item .meta{
@@ -417,7 +471,7 @@
       color: rgba(140,83,0,.95);
     }
 
-    /* Showcase / Labs */
+    /* Showcase / Cards */
     .showcase{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
@@ -430,6 +484,7 @@
       box-shadow: 0 10px 26px rgba(34,24,55,.08);
       overflow:hidden;
       transition: all .18s ease;
+      cursor:pointer;
     }
     .s-card:hover{ transform: translateY(-1px); box-shadow: 0 16px 34px rgba(34,24,55,.10); }
     .s-cover{
@@ -470,7 +525,7 @@
     }
     .modal.open{ display:grid; place-items:center; }
     .modal-card{
-      width: min(860px, 100%);
+      width: min(900px, 100%);
       border-radius: 18px;
       background: #fff;
       border: 1px solid var(--line);
@@ -495,18 +550,21 @@
     .modal-close:hover{ background: rgba(229,211,255,.55); }
 
     /* Responsive */
-    @media (max-width: 1040px){
+    @media (max-width: 1120px){
       .hero-grid{ grid-template-columns: 1fr; }
       .actions{ min-width: auto; }
       .brand{ min-width: 190px; }
       .quick-grid{ grid-template-columns: repeat(3, 1fr); }
+      .quick-grid.secondary{ grid-template-columns: repeat(3, 1fr); }
       .showcase{ grid-template-columns: repeat(2, 1fr); }
+      .dropdown-menu{ width: 340px; }
     }
     @media (max-width: 820px){
       .nav{ display:none; }
       .search{ display:none; }
       .hamburger{ display:inline-block; }
       .quick-grid{ grid-template-columns: repeat(2, 1fr); }
+      .quick-grid.secondary{ grid-template-columns: repeat(2, 1fr); }
       .grid-2{ grid-template-columns: 1fr; }
       .showcase{ grid-template-columns: 1fr; }
       .footer-grid{ grid-template-columns: 1fr; }
@@ -536,18 +594,22 @@
         <button class="modal-close" onclick="toggleDrawer(false)" aria-label="ปิดเมนู">ปิด</button>
       </div>
 
+      <button onclick="openDropdownModal('หลักสูตรที่เปิดรับ', DATA.programs, 'program')">หลักสูตรที่เปิดรับ</button>
       <a href="#services" onclick="toggleDrawer(false)">บริการด่วน</a>
-      <a href="#student" onclick="toggleDrawer(false)">สำหรับนักศึกษา</a>
-      <a href="#admissions" onclick="toggleDrawer(false)">สมัครเรียน & การเงิน</a>
-      <a href="#labs" onclick="toggleDrawer(false)">แหล่งฝึก & ศูนย์ปฏิบัติการ</a>
-      <a href="#showcase" onclick="toggleDrawer(false)">ผลงาน & ความภาคภูมิใจ</a>
-      <a href="#network" onclick="toggleDrawer(false)">เครือข่าย & วิเทศสัมพันธ์</a>
+      <a href="#studentServices" onclick="toggleDrawer(false)">บริการนักศึกษา</a>
+      <a href="#student" onclick="toggleDrawer(false)">ข่าว/กิจกรรม</a>
+      <a href="#labs" onclick="toggleDrawer(false)">แหล่งฝึก</a>
+      <a href="#showcase" onclick="toggleDrawer(false)">ผลงาน</a>
+      <a href="#network" onclick="toggleDrawer(false)">เครือข่าย</a>
+      <button onclick="openModal('สำหรับบุคลากร: ระบบ E-Service', templates.staffEService)">สำหรับบุคลากร</button>
+      <button onclick="openDropdownModal('งานวิจัยและบริการวิชาการ', DATA.researchMenu, 'research')">งานวิจัยและบริการวิชาการ</button>
+      <a href="#ita" onclick="toggleDrawer(false)">ITA / ความโปร่งใส</a>
       <a href="#about" onclick="toggleDrawer(false)">เกี่ยวกับคณะ</a>
       <a href="#contact" onclick="toggleDrawer(false)">ติดต่อคณะ</a>
 
       <div class="stack-12" style="margin-top:auto;">
-        <button class="btn primary" onclick="openModal('สมัครเรียน', templates.admissions)">สมัครเรียน</button>
-        <button class="btn" onclick="openModal('ชำระค่าเทอม', templates.tuition)">ชำระค่าเทอม</button>
+        <button class="primary" onclick="openModal('สมัครเรียน & หลักสูตร', templates.admissions)">สมัครเรียน</button>
+        <button onclick="openModal('การชำระค่าเทอม', templates.tuition)">ชำระค่าเทอม</button>
       </div>
     </div>
   </div>
@@ -565,18 +627,42 @@
         </div>
 
         <nav class="nav" aria-label="เมนูหลัก">
+          <!-- Leftmost: Programs Dropdown -->
+          <div class="dropdown" id="ddPrograms">
+            <button class="nav-btn" type="button" onclick="toggleDropdown('ddPrograms')">
+              หลักสูตรที่เปิดรับ <span class="caret">▾</span>
+            </button>
+            <div class="dropdown-menu" role="menu" aria-label="รายชื่อหลักสูตร">
+              <div class="stack-8" id="programMenu"></div>
+            </div>
+          </div>
+
           <a href="#services">บริการด่วน</a>
-          <a href="#student">สำหรับนักศึกษา</a>
+          <a href="#studentServices">บริการนักศึกษา</a>
+          <a href="#student">ข่าว/กิจกรรม</a>
           <a href="#labs">แหล่งฝึก</a>
           <a href="#showcase">ผลงาน</a>
           <a href="#network">เครือข่าย</a>
-          <a href="#about">เกี่ยวกับคณะ</a>
-          <a href="#contact">ติดต่อ</a>
+
+          <!-- Staff Tab -->
+          <button class="nav-btn" type="button" onclick="openModal('สำหรับบุคลากร: ระบบ E-Service', templates.staffEService)">
+            สำหรับบุคลากร
+          </button>
+
+          <!-- Rightmost: Research Dropdown -->
+          <div class="dropdown right" id="ddResearch">
+            <button class="nav-btn" type="button" onclick="toggleDropdown('ddResearch')">
+              งานวิจัยและบริการวิชาการ <span class="caret">▾</span>
+            </button>
+            <div class="dropdown-menu" role="menu" aria-label="เมนูงานวิจัยและบริการวิชาการ">
+              <div class="stack-8" id="researchMenu"></div>
+            </div>
+          </div>
         </nav>
 
         <div class="search" role="search" aria-label="ค้นหา">
           <span aria-hidden="true">⌕</span>
-          <input id="searchInput" type="search" placeholder="ค้นหา: ข่าว / กิจกรรม / บริการ / แบบฟอร์ม (กด Ctrl+K)" />
+          <input id="searchInput" type="search" placeholder="ค้นหา: ข่าว / กิจกรรม / บริการ / ITA (กด Ctrl+K)" />
           <span class="kbd">Ctrl K</span>
         </div>
 
@@ -597,18 +683,18 @@
       <div class="hero-grid">
         <div class="hero-card">
           <div class="hero-body stack-16">
-            <div class="pill">บริการนักศึกษาเป็นศูนย์กลาง • ข่าว • กิจกรรม • แหล่งฝึก • เครือข่าย</div>
+            <div class="pill">เน้นบริการนักศึกษา • โทนม่วงอ่อน • ดีไซน์บริหารธุรกิจ • เข้าถึงข้อมูลใน 2 คลิก</div>
             <div class="stack-8">
               <h1 class="hero-title">เว็บไซต์คณะสำหรับ “ลูกค้าคณะ” โดยเฉพาะนักศึกษา</h1>
               <p class="hero-sub">
-                เข้าถึงบริการสำคัญได้ภายใน 2 คลิก พร้อมข้อมูลที่อัปเดตต่อเนื่อง
-                ในโทนสีม่วงอ่อนที่ดูทันสมัยและมีความเป็นบริหารธุรกิจ
+                รวมบริการ ข่าว กิจกรรม แหล่งฝึก เครือข่าย และโมดูล ITA ไว้ครบในหน้าเดียว
+                พร้อมโครงสร้างที่ขยายต่อได้ (ไทย/อังกฤษ, ระบบถาม-ตอบ, เชื่อมฐานข้อมูลหลังบ้าน)
               </p>
             </div>
             <div class="hero-cta">
-              <button class="btn primary" onclick="scrollToId('services')">เริ่มจากบริการด่วน</button>
-              <button class="btn" onclick="scrollToId('student')">ดูข่าว/ประกาศนักศึกษา</button>
-              <button class="btn ghost" onclick="openModal('สารจากคณบดี', templates.deanMessage)">สารจากคณบดี</button>
+              <button class="btn primary" onclick="scrollToId('studentServices')">ไปที่บริการนักศึกษา</button>
+              <button class="btn" onclick="scrollToId('services')">บริการด่วน</button>
+              <button class="btn ghost" onclick="scrollToId('ita')">ไปที่ ITA</button>
             </div>
           </div>
         </div>
@@ -630,7 +716,7 @@
       <div class="section-head">
         <div class="stack-8">
           <h2>บริการด่วน (Quick Services)</h2>
-          <p>เมนูที่นักศึกษาต้องใช้บ่อย วางไว้หน้าแรกให้ชัดเจน</p>
+          <p>เมนูที่นักศึกษาต้องใช้บ่อย วางไว้หน้าแรกให้เข้าถึงง่าย</p>
         </div>
         <div class="row wrap">
           <span class="chip" onclick="openModal('รวมลิงก์ระบบ', templates.systemLinks)">รวมลิงก์ระบบ</span>
@@ -639,6 +725,24 @@
       </div>
 
       <div class="quick-grid" id="quickGrid"></div>
+    </div>
+  </section>
+
+  <!-- Student Services (Requested additions) -->
+  <section class="section" id="studentServices">
+    <div class="container">
+      <div class="section-head">
+        <div class="stack-8">
+          <h2>บริการนักศึกษา (Student Services)</h2>
+          <p>กิจกรรมอบรม / ระบบตรวจสอบ / สวัสดิการ และหน่วยงานนักศึกษา</p>
+        </div>
+        <div class="row wrap">
+          <span class="chip" onclick="openModal('สโมสรนักศึกษาคณะวิทยาการจัดการ', templates.studentClub)">สโมสรนักศึกษา</span>
+          <span class="chip" onclick="openModal('กองทุนกู้ยืมเพื่อการศึกษา (กยศ.)', templates.studentLoan)">กยศ.</span>
+        </div>
+      </div>
+
+      <div class="quick-grid secondary" id="studentServiceGrid"></div>
     </div>
   </section>
 
@@ -662,7 +766,7 @@
         </div>
 
         <!-- Activities -->
-        <div class="panel" id="admissions">
+        <div class="panel">
           <div class="panel-head">
             <h3>กิจกรรมนักศึกษา (Upcoming)</h3>
             <div class="tools">
@@ -684,7 +788,7 @@
       <div class="section-head">
         <div class="stack-8">
           <h2>แหล่งฝึก & ศูนย์ปฏิบัติการ</h2>
-          <p>พื้นที่เรียนรู้เชิงปฏิบัติ เพื่อเสริมทักษะการทำงานจริง</p>
+          <p>พื้นที่เรียนรู้เชิงปฏิบัติ เพื่อเสริมสมรรถนะด้านบริหารธุรกิจ</p>
         </div>
         <div class="row wrap">
           <span class="chip" onclick="openModal('แนวทางการนำเสนอแหล่งฝึก', templates.practiceGuide)">แนวทางนำเสนอ</span>
@@ -745,6 +849,34 @@
     </div>
   </section>
 
+  <!-- ITA Section (Requested additions) -->
+  <section class="section" id="ita">
+    <div class="container">
+      <div class="section-head">
+        <div class="stack-8">
+          <h2>การให้บริการ ITA / ความโปร่งใส (Public Service & Transparency)</h2>
+          <p>ข้อมูลบริการและเอกสารสำคัญที่ประชาชน/นักศึกษาควรเข้าถึงได้สะดวก</p>
+        </div>
+        <div class="row wrap">
+          <span class="chip" onclick="openModal('ภาพรวม ITA', templates.itaOverview)">ภาพรวม</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h3>เมนู ITA</h3>
+          <div class="tools">
+            <span class="chip" onclick="openModal('นโยบายคุ้มครองข้อมูลส่วนบุคคล', templates.pdpa)">นโยบาย PDPA</span>
+            <span class="chip" onclick="openModal('แผนปฏิบัติการป้องกันการทุจริต', templates.antiCorruption)">แผนป้องกันทุจริต</span>
+          </div>
+        </div>
+        <div class="panel-body">
+          <ul class="list" id="itaList"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- About -->
   <section class="section" id="about">
     <div class="container">
@@ -759,13 +891,13 @@
         <div class="panel-body">
           <div class="stack-12">
             <p class="muted">
-              เว็บต้นแบบนี้ออกแบบให้ “นักศึกษาเป็นศูนย์กลาง” พร้อมโครงสร้างที่รองรับการขยายในอนาคต
-              เช่น ไทย/อังกฤษ, ระบบถาม-ตอบ, และการเชื่อมต่อฐานข้อมูลข่าว/กิจกรรมจากระบบหลังบ้าน
+              เว็บต้นแบบนี้ออกแบบให้ “นักศึกษาเป็นศูนย์กลาง” และเพิ่มโมดูลตามภารกิจองค์กร
+              เช่น บริการนักศึกษา, ระบบ E-Service สำหรับบุคลากร, งานวิจัย/บริการวิชาการ และ ITA
             </p>
             <div class="row wrap">
-              <button class="btn primary" onclick="openModal('สมัครเรียน & การเงิน', templates.admissions)">สมัครเรียน & การเงิน</button>
-              <button class="btn" onclick="openModal('บริการนักศึกษา', templates.studentServices)">บริการนักศึกษา</button>
-              <button class="btn" onclick="openModal('แหล่งฝึก/ศูนย์ปฏิบัติการ', templates.practiceCenters)">แหล่งฝึก/ศูนย์ปฏิบัติการ</button>
+              <button class="btn primary" onclick="openModal('สมัครเรียน & หลักสูตร', templates.admissions)">สมัครเรียน & หลักสูตร</button>
+              <button class="btn" onclick="openModal('สำหรับบุคลากร: ระบบ E-Service', templates.staffEService)">E-Service บุคลากร</button>
+              <button class="btn" onclick="openModal('งานวิจัยและบริการวิชาการ', templates.researchLanding)">งานวิจัย/บริการวิชาการ</button>
               <button class="btn" onclick="openModal('ติดต่อคณะ', templates.contact)">ติดต่อคณะ</button>
             </div>
           </div>
@@ -790,18 +922,17 @@
             ช่องทางติดต่อ (ตัวอย่าง): โทร. 0XX-XXX-XXXX • อีเมล: fms@yru.ac.th • Facebook/YouTube/TikTok: @FMSYRU
           </div>
           <div class="tiny">
-            หมายเหตุ: เปลี่ยนข้อมูลติดต่อ ลิงก์ และชุดข้อมูลตัวอย่างในไฟล์นี้ได้ทันทีโดยแก้ในส่วน “DATA” ของ JavaScript
+            หมายเหตุ: เปลี่ยน “ลิงก์จริง/ชื่อระบบ/ชื่อหลักสูตร” ได้ในส่วน DATA ของ JavaScript
           </div>
         </div>
 
         <div class="stack-12">
           <strong style="font-size:14px;">ลิงก์สำคัญ</strong>
           <div class="row wrap">
-            <a class="chip" href="#services">บริการด่วน</a>
+            <a class="chip" href="#studentServices">บริการนักศึกษา</a>
             <a class="chip" href="#student">ข่าว/กิจกรรม</a>
-            <a class="chip" href="#labs">แหล่งฝึก</a>
-            <a class="chip" href="#network">เครือข่าย</a>
-            <span class="chip" onclick="openModal('FAQ นักศึกษา', templates.faq)">FAQ นักศึกษา</span>
+            <a class="chip" href="#ita">ITA</a>
+            <span class="chip" onclick="openModal('FAQ นักศึกษา', templates.faq)">FAQ</span>
           </div>
         </div>
       </div>
@@ -843,6 +974,7 @@
       $("#modalBody").innerHTML = html || "<p>ยังไม่มีรายละเอียด</p>";
       $("#modal").classList.add("open");
       $("#modal").setAttribute("aria-hidden","false");
+      closeAllDropdowns();
     }
 
     function closeModal(){
@@ -850,7 +982,28 @@
       $("#modal").setAttribute("aria-hidden","true");
     }
 
-    // Close modal on background click
+    // Dropdown controls
+    function toggleDropdown(id){
+      const el = document.getElementById(id);
+      if(!el) return;
+      const isOpen = el.classList.contains("open");
+      closeAllDropdowns();
+      el.classList.toggle("open", !isOpen);
+    }
+    function closeAllDropdowns(){
+      ["ddPrograms","ddResearch"].forEach(id=>{
+        const el = document.getElementById(id);
+        if(el) el.classList.remove("open");
+      });
+    }
+
+    // Click outside to close dropdown
+    document.addEventListener("click", (e)=>{
+      const inDropdown = e.target.closest?.(".dropdown");
+      if(!inDropdown) closeAllDropdowns();
+    });
+
+    // Modal close by background click
     $("#modal").addEventListener("click", (e)=>{
       if(e.target.id === "modal") closeModal();
     });
@@ -865,6 +1018,7 @@
       if(e.key === "Escape"){
         closeModal();
         toggleDrawer(false);
+        closeAllDropdowns();
       }
       if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k"){
         e.preventDefault();
@@ -872,10 +1026,59 @@
       }
     });
 
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    // Dropdown modal for mobile drawer convenience
+    function openDropdownModal(title, items, kind){
+      toggleDrawer(false);
+      const rows = items.map(it=>{
+        const t = kind==="program"
+          ? `<button class="btn primary" style="width:100%;justify-content:center" onclick="alert('ตัวอย่าง: เปิดรายละเอียดหลักสูตร')">ดูรายละเอียด</button>`
+          : `<button class="btn primary" style="width:100%;justify-content:center" onclick="alert('ตัวอย่าง: เปิดหน้าเมนูงานวิจัย/บริการวิชาการ')">เปิดเมนู</button>`;
+
+        return `
+          <div class="item" style="cursor:default" onclick="event.stopPropagation()">
+            <strong style="font-size:13px;">${escapeHtml(it.title)}</strong>
+            <div class="meta">
+              <span class="tag">${escapeHtml(it.note || "เมนู")}</span>
+              ${it.group ? `<span class="tag">${escapeHtml(it.group)}</span>` : ""}
+            </div>
+            <div style="margin-top:10px;">${t}</div>
+          </div>
+        `;
+      }).join("");
+      openModal(title, `<div class="stack-12">${rows}</div>`);
+    }
+
     /**********************
      * DATA (แก้ตรงนี้ได้)
      **********************/
     const DATA = {
+      programs: [
+        { title:"บธ.บ. การจัดการธุรกิจค้าปลีกสมัยใหม่", note:"หลักสูตรปริญญาตรี" },
+        { title:"บธ.บ. การตลาดดิจิทัล", note:"หลักสูตรปริญญาตรี" },
+        { title:"บธ.บ. การเงินและการประกันภัย", note:"หลักสูตรปริญญาตรี" },
+        { title:"บธ.บ. การบัญชี", note:"หลักสูตรปริญญาตรี" },
+        { title:"นศ.ใหม่/โครงการพิเศษ (ถ้ามี)", note:"ประกาศเพิ่มเติม" }
+      ],
+      researchMenu: [
+        { title:"สำหรับนักวิจัยและอาจารย์", note:"คู่มือ/แบบฟอร์ม/ระบบ" },
+        { title:"สำหรับชุมชน", note:"รับบริการวิชาการ/โครงการชุมชน" },
+        { title:"สำหรับหน่วยงานและองค์กร", note:"ความร่วมมือ/อบรม/ที่ปรึกษา" },
+        { title:"เครือข่ายพันธมิตร", note:"MOU/Partners" },
+        { title:"ข่าวสารแหล่งทุน", note:"ประกาศทุน/Call for proposals" },
+        { title:"สารสนเทศงานวิจัยและบริการวิชาการ", note:"รายงาน/ฐานข้อมูล/ผลงาน" },
+        { title:"ทำนุบำรุงศิลปวัฒนธรรม", note:"กิจกรรม/โครงการ" },
+        { title:"ศูนย์บริการท้องถิ่น", note:"One-stop / Service Point" },
+        { title:"ผลการดำเนินงาน", note:"สรุปผล/รายงาน" }
+      ],
       urgent: [
         { title:"ประกาศลงทะเบียนเรียน/เพิ่ม-ถอนรายวิชา", date:"สัปดาห์ที่ 1 ของภาคการศึกษา", level:"warn" },
         { title:"กำหนดชำระค่าธรรมเนียมการศึกษา", date:"ภายในวันที่กำหนดของมหาวิทยาลัย", level:"warn" },
@@ -887,7 +1090,16 @@
         { icon:"🗓️", title:"ปฏิทินการศึกษา", desc:"วันสำคัญ/กำหนดการ", modal:"ปฏิทินการศึกษา", contentKey:"calendar" },
         { icon:"📄", title:"ดาวน์โหลด", desc:"แบบฟอร์ม/คำร้อง/เอกสาร", modal:"แบบฟอร์ม/ดาวน์โหลด", contentKey:"downloads" },
         { icon:"🏢", title:"แหล่งฝึก", desc:"ศูนย์ธุรกิจ/Lab/ฝึกปฏิบัติ", modal:"แหล่งฝึก & ศูนย์ปฏิบัติการ", contentKey:"practiceCenters" },
-        { icon:"🆘", title:"ช่วยเหลือ/ติดต่อ", desc:"ช่องทางติดต่อ/คำถามพบบ่อย", modal:"ติดต่อ/ขอความช่วยเหลือ", contentKey:"contact" }
+        { icon:"🧑‍💼", title:"E-Service บุคลากร", desc:"ระบบบริการภายในคณะ", modal:"สำหรับบุคลากร: ระบบ E-Service", contentKey:"staffEService" }
+      ],
+      studentServices: [
+        { icon:"🇬🇧", title:"อบรมภาษาอังกฤษ", desc:"กิจกรรมพัฒนาทักษะภาษาอังกฤษ", modal:"กิจกรรมอบรมภาษาอังกฤษ", contentKey:"engTraining" },
+        { icon:"🇲🇾", title:"อบรมภาษามลายู", desc:"กิจกรรมพัฒนาทักษะภาษามลายู", modal:"กิจกรรมอบรมภาษามลายู", contentKey:"msTraining" },
+        { icon:"💻", title:"สมรรถนะดิจิทัล", desc:"อบรม/ทดสอบ/ใบรับรอง", modal:"กิจกรรมอบรมสมรรถนะดิจิทัล", contentKey:"digitalCompetency" },
+        { icon:"🪪", title:"ผลสอบอัตลักษณ์", desc:"ตรวจสอบผลสอบอัตลักษณ์", modal:"ตรวจสอบผลสอบอัตลักษณ์", contentKey:"identityExam" },
+        { icon:"⏱️", title:"ชั่วโมงกิจกรรม", desc:"ตรวจสอบชั่วโมงกิจกรรม", modal:"ตรวจสอบชั่วโมงกิจกรรม", contentKey:"activityHours" },
+        { icon:"📌", title:"กยศ.", desc:"กองทุนกู้ยืมเพื่อการศึกษา", modal:"กองทุนกู้ยืมเพื่อการศึกษา (กยศ.)", contentKey:"studentLoan" },
+        { icon:"🏛️", title:"สโมสรนักศึกษา", desc:"สโมสรนักศึกษาคณะฯ", modal:"สโมสรนักศึกษาคณะวิทยาการจัดการ", contentKey:"studentClub" }
       ],
       news: [
         { title:"ประกาศ: เปิดยื่นคำร้องขอเอกสารรับรองนักศึกษา", type:"ประกาศ", date:"อัปเดตล่าสุด", tags:["เอกสาร","บริการนักศึกษา"] },
@@ -919,6 +1131,16 @@
         { title:"คลิป: แนะนำหลักสูตร/จุดเด่นการเรียน", meta:"ความยาว 45–60 วินาที", note:"ใช้แนวตั้ง พร้อมคำบรรยาย" },
         { title:"คลิป: ผลงานนักศึกษา/กิจกรรมเด่น", meta:"ความยาว 30–60 วินาที", note:"เน้นก่อน-หลัง/ไฮไลต์" },
         { title:"คลิป: แหล่งฝึก/ศูนย์ธุรกิจ", meta:"ความยาว 30–60 วินาที", note:"ถ่ายมุมกิจกรรมจริง + Call to Action" }
+      ],
+      ita: [
+        { title:"1) คู่มือหรือมาตรฐานการปฏิบัติงาน", note:"SOP / คู่มือปฏิบัติงาน", key:"itaSop" },
+        { title:"2) คู่มือหรือมาตรฐานการให้บริการ", note:"Service Standards", key:"itaServiceStd" },
+        { title:"3) ข้อมูลเชิงสถิติการให้บริการ", note:"Service Statistics", key:"itaStats" },
+        { title:"4) รายงานผลความพึงพอใจในการให้บริการ", note:"Satisfaction Report", key:"itaSatisfaction" },
+        { title:"5) แนวปฏิบัติการใช้ทรัพย์สินของหน่วยงาน", note:"Asset Use Guidelines", key:"itaAssets" },
+        { title:"6) แผนปฏิบัติการป้องกันการทุจริต", note:"Anti-Corruption Plan", key:"antiCorruption" },
+        { title:"7) นโยบายคุ้มครองข้อมูลส่วนบุคคล", note:"PDPA Policy", key:"pdpa" },
+        { title:"8) โครงการประกวดต่างๆ", note:"Competitions / Awards", key:"itaContests" }
       ]
     };
 
@@ -928,15 +1150,13 @@
     const templates = {
       sitemap: `
         <div class="stack-12">
-          <p><b>Site Map (โครงสร้างเว็บแบบ Student-Centric)</b></p>
+          <p><b>Site Map (Student-Centric + ITA + E-Service + Research)</b></p>
           <ul>
-            <li><b>หน้าแรก:</b> บริการด่วน • ข่าว/ประกาศ นศ. • กิจกรรม • ผลงาน • คลิปสั้น • สารจากคณบดี</li>
-            <li><b>สำหรับนักศึกษา:</b> ข่าว/ประกาศ • กิจกรรม • คู่มือ/FAQ • ดาวน์โหลด • ระบบออนไลน์</li>
-            <li><b>สมัครเรียน & การเงิน:</b> หลักสูตร • สมัครเรียน • ค่าเทอม/การชำระ • FAQ</li>
-            <li><b>แหล่งฝึก & ศูนย์ปฏิบัติการ:</b> ศูนย์ธุรกิจ/Lab • แหล่งฝึก • เครือข่ายสถานประกอบการ</li>
-            <li><b>ผลงาน & ความภาคภูมิใจ:</b> นักศึกษา • อาจารย์ • บริการวิชาการ</li>
-            <li><b>เครือข่าย & วิเทศสัมพันธ์:</b> MOU • เครือข่ายชุมชน • เครือข่ายต่างประเทศ</li>
-            <li><b>เกี่ยวกับคณะ:</b> สารจากคณบดี • โครงสร้างการบริหาร • ติดต่อ</li>
+            <li><b>หน้าแรก:</b> บริการด่วน • บริการนักศึกษา • ข่าว/กิจกรรม • แหล่งฝึก • ผลงาน • เครือข่าย • ITA</li>
+            <li><b>หลักสูตรที่เปิดรับ:</b> รายชื่อหลักสูตร (Dropdown)</li>
+            <li><b>สำหรับบุคลากร:</b> ระบบ E-Service ของคณะ</li>
+            <li><b>งานวิจัยและบริการวิชาการ:</b> เมนูสำหรับนักวิจัย/ชุมชน/องค์กร/ทุน/สารสนเทศ ฯลฯ (Dropdown)</li>
+            <li><b>ITA:</b> SOP • มาตรฐานบริการ • สถิติบริการ • ความพึงพอใจ • แนวปฏิบัติทรัพย์สิน • แผนป้องกันทุจริต • PDPA • โครงการประกวด</li>
           </ul>
         </div>
       `,
@@ -944,38 +1164,36 @@
         <div class="stack-12">
           <p><b>โครงสร้างหน้าแรก (Homepage Layout)</b></p>
           <ol>
-            <li>Hero + Call-to-Action (สมัครเรียน/บริการ)</li>
-            <li>Quick Services (ไอคอน 6 เมนู)</li>
-            <li>ข่าว/ประกาศนักศึกษา</li>
-            <li>กิจกรรมนักศึกษา (Upcoming)</li>
+            <li>Hero + CTA</li>
+            <li>Quick Services (ไอคอน)</li>
+            <li><b>บริการนักศึกษา</b> (อบรมภาษา/ดิจิทัล/ตรวจสอบระบบ/กยศ./สโมสร)</li>
+            <li>ข่าว/ประกาศนักศึกษา + กิจกรรม (Upcoming)</li>
             <li>แหล่งฝึก & ศูนย์ปฏิบัติการ</li>
             <li>ผลงาน & ความภาคภูมิใจ</li>
             <li>เครือข่าย & วิเทศสัมพันธ์</li>
-            <li>คลิปสั้น 1 นาที (โมดูล)</li>
+            <li><b>ITA</b> (อยู่ช่วงล่างของหน้า)</li>
           </ol>
-          <p class="muted">แนวทาง: เน้น Mobile-First, สแกนง่าย, ข้อมูลนักศึกษาต้องเด่นกว่าเนื้อหาอื่น</p>
         </div>
       `,
       admissions: `
         <div class="stack-12">
           <p><b>สมัครเรียน & หลักสูตร</b></p>
           <ul>
-            <li>หลักสูตรระดับปริญญาตรี/บัณฑิตศึกษา (แยกตามสาขา)</li>
+            <li>หลักสูตรทั้งหมด (แยกตามสาขา)</li>
             <li>ขั้นตอนสมัครเรียน (Timeline + เอกสาร)</li>
             <li>ช่องทางสมัคร (ลิงก์/QR)</li>
             <li>FAQ: คุณสมบัติ/ค่าธรรมเนียม/ทุน/กำหนดการ</li>
           </ul>
-          <p class="tiny">หมายเหตุ: เชื่อมหน้า Landing เฉพาะช่วงรับสมัครเพื่อเพิ่ม Conversion</p>
         </div>
       `,
       tuition: `
         <div class="stack-12">
           <p><b>การชำระค่าเทอม</b></p>
           <ul>
-            <li>ช่องทางชำระเงิน (ตัวอย่าง): เคาน์เตอร์/ธนาคาร/ออนไลน์</li>
-            <li>วิธีตรวจสอบสถานะการชำระ</li>
-            <li>การขอใบเสร็จ/เอกสารการเงิน</li>
-            <li>ติดต่อเจ้าหน้าที่การเงิน (เบอร์/ไลน์/อีเมล)</li>
+            <li>ช่องทางชำระเงิน: เคาน์เตอร์/ธนาคาร/ออนไลน์</li>
+            <li>ตรวจสอบสถานะการชำระ</li>
+            <li>ขอใบเสร็จ/เอกสารการเงิน</li>
+            <li>ติดต่อเจ้าหน้าที่การเงิน</li>
           </ul>
         </div>
       `,
@@ -994,12 +1212,11 @@
         <div class="stack-12">
           <p><b>แบบฟอร์ม/ดาวน์โหลด</b></p>
           <ul>
-            <li>คำร้องทั่วไป (PDF/Word)</li>
-            <li>แบบฟอร์มขอหนังสือรับรอง</li>
+            <li>คำร้องทั่วไป</li>
+            <li>ขอหนังสือรับรอง</li>
             <li>แบบฟอร์มฝึกงาน/สหกิจ</li>
             <li>คู่มือนักศึกษา</li>
           </ul>
-          <p class="tiny">แนะนำ: จัดหมวดและมีช่องค้นหาในหน้านี้</p>
         </div>
       `,
       systemLinks: `
@@ -1008,7 +1225,7 @@
           <ul>
             <li>ระบบทะเบียน/ผลการเรียน</li>
             <li>ระบบชำระเงิน</li>
-            <li>ระบบประกันคุณภาพ/กิจกรรม</li>
+            <li>ระบบกิจกรรม/ชั่วโมงกิจกรรม</li>
             <li>อีเมลนักศึกษา/บัญชีผู้ใช้</li>
           </ul>
         </div>
@@ -1017,10 +1234,10 @@
         <div class="stack-12">
           <p><b>แหล่งฝึก & ศูนย์ปฏิบัติการ</b></p>
           <ul>
-            <li>ศูนย์ธุรกิจคณะ / ห้องปฏิบัติการ (ภาพ+คลิป)</li>
+            <li>ศูนย์ธุรกิจคณะ / ห้องปฏิบัติการ</li>
             <li>ตาราง/รูปแบบการเข้าใช้</li>
-            <li>บุคลากร/ผู้ประสานงาน</li>
-            <li>กิจกรรมฝึกปฏิบัติและผลงานที่เกิดขึ้น</li>
+            <li>ผู้ประสานงาน</li>
+            <li>กิจกรรมฝึกปฏิบัติและผลงาน</li>
           </ul>
         </div>
       `,
@@ -1030,8 +1247,8 @@
           <ol>
             <li>ใช้ภาพจริง + คลิปแนวตั้ง 30–60 วินาที</li>
             <li>มี “What you will learn” 3–5 บรรทัด</li>
-            <li>มี “Use cases” เช่น งานที่ทำได้จริง/ทักษะที่ได้</li>
-            <li>มีปุ่ม CTA: ขอเข้าเยี่ยมชม / สมัครเข้าร่วมกิจกรรม</li>
+            <li>มี “Use cases” งานจริง/ทักษะจริง</li>
+            <li>มีปุ่ม CTA: ขอเข้าเยี่ยมชม / สมัครเข้าร่วม</li>
           </ol>
         </div>
       `,
@@ -1039,9 +1256,9 @@
         <div class="stack-12">
           <p><b>ตัวอย่างหน้าเครือข่าย & วิเทศสัมพันธ์</b></p>
           <ul>
-            <li>แยกเป็น 3 กลุ่ม: ต่างประเทศ / สถานประกอบการ / ชุมชน</li>
+            <li>แยกเป็น: ต่างประเทศ / สถานประกอบการ / ชุมชน</li>
             <li>แต่ละเครือข่ายมี: ชื่อหน่วยงาน • ประเภทความร่วมมือ • กิจกรรมล่าสุด</li>
-            <li>มี “Story” และภาพกิจกรรม เพื่อความน่าเชื่อถือ</li>
+            <li>มี Story + ภาพกิจกรรม เพิ่มความน่าเชื่อถือ</li>
           </ul>
         </div>
       `,
@@ -1049,39 +1266,156 @@
         <div class="stack-12">
           <p><b>แนวทางคลิปสั้น 1 นาที</b></p>
           <ul>
-            <li>โครง: Hook 3 วิ → เนื้อหา 40 วิ → CTA 10 วิ</li>
-            <li>ใส่คำบรรยายทุกคลิป (คนดูแบบปิดเสียงได้)</li>
-            <li>ใช้ Key Visual โทนม่วงอ่อน + โลโก้คณะ</li>
-            <li>หมวดคลิป: หลักสูตร / ผลงาน / กิจกรรม / แหล่งฝึก / เครือข่าย</li>
+            <li>Hook 3 วิ → เนื้อหา 40 วิ → CTA 10 วิ</li>
+            <li>ใส่คำบรรยายทุกคลิป</li>
+            <li>โทนม่วงอ่อน + โลโก้คณะ</li>
           </ul>
         </div>
       `,
-      deanMessage: `
+
+      /* Staff tab */
+      staffEService: `
         <div class="stack-12">
-          <p><b>สารจากคณบดี (ตัวอย่างข้อความ)</b></p>
-          <p class="muted">ยินดีต้อนรับทุกท่านสู่คณะวิทยาการจัดการ เรามุ่งพัฒนานักศึกษาให้มีสมรรถนะด้านบริหารธุรกิจ
-          พร้อมทักษะเชิงปฏิบัติและความเป็นมืออาชีพ เพื่อก้าวสู่โลกการทำงานอย่างมั่นใจ</p>
-        </div>
-      `,
-      studentServices: `
-        <div class="stack-12">
-          <p><b>บริการนักศึกษา</b></p>
+          <p><b>สำหรับบุคลากร: ระบบ E-Service ของคณะ (ตัวอย่างเมนู)</b></p>
           <ul>
-            <li>ข่าว/ประกาศที่เกี่ยวข้องกับการเรียน</li>
-            <li>ดาวน์โหลดแบบฟอร์ม/คำร้อง</li>
-            <li>ช่องทางติดต่อเจ้าหน้าที่</li>
-            <li>FAQ ที่ถามบ่อย</li>
+            <li>ระบบยื่นคำร้อง/เอกสารภายใน</li>
+            <li>ระบบแจ้งซ่อม/ครุภัณฑ์/อาคารสถานที่</li>
+            <li>ระบบจองห้อง/อุปกรณ์โสตฯ</li>
+            <li>ระบบติดตามงาน/งานธุรการ</li>
+            <li>ระบบฐานข้อมูลบุคลากร/เอกสารมาตรฐาน</li>
+          </ul>
+          <p class="muted">สามารถเปลี่ยนรายการให้ตรงกับระบบจริงของคณะได้ทันที</p>
+        </div>
+      `,
+
+      /* Student services templates */
+      engTraining: `
+        <div class="stack-12">
+          <p><b>กิจกรรมอบรมภาษาอังกฤษ</b></p>
+          <ul>
+            <li>รอบอบรม/คอร์ส (Speaking/TOEIC/Presentation)</li>
+            <li>วิธีลงทะเบียน / จำนวนรับ</li>
+            <li>เอกสาร/เกณฑ์รับรองชั่วโมง (ถ้ามี)</li>
           </ul>
         </div>
       `,
+      msTraining: `
+        <div class="stack-12">
+          <p><b>กิจกรรมอบรมภาษามลายู</b></p>
+          <ul>
+            <li>รอบอบรมพื้นฐาน/สื่อสารในงานบริการ</li>
+            <li>วิธีลงทะเบียน</li>
+            <li>ช่องทางเรียนเสริม/สื่อการเรียนรู้</li>
+          </ul>
+        </div>
+      `,
+      digitalCompetency: `
+        <div class="stack-12">
+          <p><b>กิจกรรมอบรมสมรรถนะดิจิทัล</b></p>
+          <ul>
+            <li>อบรมเครื่องมือดิจิทัลเพื่อการทำงาน</li>
+            <li>ทดสอบ/รับรองสมรรถนะ (ถ้ามี)</li>
+            <li>แนบคู่มือ/วิดีโอสอน</li>
+          </ul>
+        </div>
+      `,
+      identityExam: `
+        <div class="stack-12">
+          <p><b>ตรวจสอบผลสอบอัตลักษณ์</b></p>
+          <ul>
+            <li>ลิงก์ตรวจสอบผลสอบ</li>
+            <li>วิธีการใช้งาน / ปัญหาที่พบบ่อย</li>
+            <li>ติดต่อผู้ประสานงาน</li>
+          </ul>
+          <p class="tiny">หมายเหตุ: เชื่อมต่อระบบจริงได้ภายหลัง</p>
+        </div>
+      `,
+      activityHours: `
+        <div class="stack-12">
+          <p><b>ตรวจสอบชั่วโมงกิจกรรม</b></p>
+          <ul>
+            <li>ลิงก์ระบบตรวจสอบชั่วโมง</li>
+            <li>แนวทางยื่นปรับปรุงข้อมูล (กรณีไม่ครบ)</li>
+            <li>ประกาศกิจกรรมที่นับชั่วโมง</li>
+          </ul>
+        </div>
+      `,
+      studentLoan: `
+        <div class="stack-12">
+          <p><b>กองทุนกู้ยืมเพื่อการศึกษา (กยศ.)</b></p>
+          <ul>
+            <li>ขั้นตอนยื่นกู้/ต่อสัญญา</li>
+            <li>เอกสารที่ต้องใช้</li>
+            <li>ปฏิทินกำหนดการ</li>
+            <li>ติดต่อเจ้าหน้าที่ผู้รับผิดชอบ</li>
+          </ul>
+        </div>
+      `,
+      studentClub: `
+        <div class="stack-12">
+          <p><b>สโมสรนักศึกษาคณะวิทยาการจัดการ</b></p>
+          <ul>
+            <li>โครงสร้างสโมสร/คณะกรรมการ</li>
+            <li>กิจกรรมประจำปี</li>
+            <li>ช่องทางติดตามข่าวสาร</li>
+            <li>ติดต่อ/เข้าร่วมสโมสร</li>
+          </ul>
+        </div>
+      `,
+
+      /* Research dropdown landing */
+      researchLanding: `
+        <div class="stack-12">
+          <p><b>งานวิจัยและบริการวิชาการ</b></p>
+          <p class="muted">เมนูประกอบ: สำหรับนักวิจัยและอาจารย์ • สำหรับชุมชน • สำหรับหน่วยงานและองค์กร • เครือข่ายพันธมิตร • ข่าวสารแหล่งทุน • สารสนเทศ • ทำนุบำรุงศิลปวัฒนธรรม • ศูนย์บริการท้องถิ่น • ผลการดำเนินงาน</p>
+          <p class="tiny">หมายเหตุ: แต่ละเมนูควรมี Landing Page พร้อมปุ่มบริการ/แบบฟอร์ม/ช่องทางติดต่อ</p>
+        </div>
+      `,
+
+      /* ITA templates */
+      itaOverview: `
+        <div class="stack-12">
+          <p><b>ภาพรวม ITA / ความโปร่งใส</b></p>
+          <ul>
+            <li>รวบรวมเอกสาร/รายงาน/นโยบายสำคัญเพื่อความโปร่งใส</li>
+            <li>เข้าถึงได้ง่าย รองรับการตรวจสอบและการให้บริการประชาชน</li>
+          </ul>
+        </div>
+      `,
+      itaSop: `
+        <div class="stack-12"><p><b>คู่มือหรือมาตรฐานการปฏิบัติงาน (SOP)</b></p><p class="muted">แนบไฟล์/ลิงก์ SOP ของหน่วยงาน เช่น งานการเงิน งานพัสดุ งานบริการนักศึกษา ฯลฯ</p></div>
+      `,
+      itaServiceStd: `
+        <div class="stack-12"><p><b>คู่มือหรือมาตรฐานการให้บริการ</b></p><p class="muted">เช่น ขั้นตอนการให้บริการ ระยะเวลาการให้บริการ ช่องทางร้องเรียน/ติดตาม</p></div>
+      `,
+      itaStats: `
+        <div class="stack-12"><p><b>ข้อมูลเชิงสถิติการให้บริการ</b></p><p class="muted">เช่น จำนวนคำร้อง/จำนวนผู้รับบริการ/ประเภทบริการรายเดือนหรือรายไตรมาส</p></div>
+      `,
+      itaSatisfaction: `
+        <div class="stack-12"><p><b>รายงานผลความพึงพอใจในการให้บริการ</b></p><p class="muted">แนบรายงาน/กราฟสรุป/ข้อเสนอแนะจากผู้รับบริการ</p></div>
+      `,
+      itaAssets: `
+        <div class="stack-12"><p><b>แนวปฏิบัติการใช้ทรัพย์สินของหน่วยงาน</b></p><p class="muted">เช่น การยืม-คืน การใช้ห้อง/อุปกรณ์ แนวทางดูแลรักษา</p></div>
+      `,
+      antiCorruption: `
+        <div class="stack-12"><p><b>แผนปฏิบัติการป้องกันการทุจริต</b></p><p class="muted">แนบแผน/กิจกรรม/ผู้รับผิดชอบ/ระยะเวลา และช่องทางแจ้งเบาะแส</p></div>
+      `,
+      pdpa: `
+        <div class="stack-12"><p><b>นโยบายคุ้มครองข้อมูลส่วนบุคคล (PDPA)</b></p><p class="muted">ประกาศนโยบาย การเก็บ ใช้ เปิดเผยข้อมูล และสิทธิของเจ้าของข้อมูล</p></div>
+      `,
+      itaContests: `
+        <div class="stack-12"><p><b>โครงการประกวดต่างๆ</b></p><p class="muted">รวมโครงการประกวด/รางวัล/เกณฑ์สมัคร/ประกาศผล เพื่อความโปร่งใส</p></div>
+      `,
+
+      /* Contact + FAQ */
       contact: `
         <div class="stack-12">
           <p><b>ติดต่อ/ขอความช่วยเหลือ</b></p>
           <ul>
-            <li>ฝ่ายงาน (การเงิน/วิชาการ/พัฒนานักศึกษา) + ช่องทางติดต่อ</li>
+            <li>ฝ่ายการเงิน / ฝ่ายวิชาการ / งานพัฒนานักศึกษา</li>
             <li>เวลาทำการ</li>
             <li>แผนที่/การเดินทาง</li>
-            <li>ช่องทาง Social</li>
+            <li>Social/Line Official (ถ้ามี)</li>
           </ul>
         </div>
       `,
@@ -1090,9 +1424,9 @@
           <p><b>FAQ นักศึกษา</b></p>
           <ul>
             <li>ขอหนังสือรับรองทำอย่างไร?</li>
-            <li>เพิ่ม-ถอนรายวิชา ต้องทำภายในช่วงไหน?</li>
+            <li>เพิ่ม-ถอนรายวิชา ต้องทำช่วงไหน?</li>
             <li>ชำระค่าเทอมแล้วตรวจสอบสถานะอย่างไร?</li>
-            <li>สมัครฝึกงาน/สหกิจต้องใช้เอกสารอะไรบ้าง?</li>
+            <li>ตรวจสอบชั่วโมงกิจกรรม/ผลสอบอัตลักษณ์ได้ที่ไหน?</li>
           </ul>
         </div>
       `
@@ -1138,6 +1472,86 @@
       });
     }
 
+    function renderStudentServices(){
+      const grid = $("#studentServiceGrid");
+      grid.innerHTML = "";
+      DATA.studentServices.forEach(s=>{
+        const div = document.createElement("div");
+        div.className = "qcard";
+        div.tabIndex = 0;
+        div.setAttribute("role","button");
+        div.setAttribute("aria-label", s.title);
+        div.innerHTML = `
+          <div class="icon" aria-hidden="true">${s.icon}</div>
+          <div class="stack-8">
+            <b>${escapeHtml(s.title)}</b>
+            <small>${escapeHtml(s.desc)}</small>
+          </div>
+        `;
+        const open = ()=> openModal(s.modal || s.title, templates[s.contentKey] || "<p>ยังไม่มีรายละเอียด</p>");
+        div.addEventListener("click", open);
+        div.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" ") { e.preventDefault(); open(); }});
+        grid.appendChild(div);
+      });
+    }
+
+    // Programs dropdown render
+    function renderProgramsMenu(){
+      const box = $("#programMenu");
+      box.innerHTML = "";
+      DATA.programs.forEach(p=>{
+        const btn = document.createElement("button");
+        btn.className = "dd-item";
+        btn.type = "button";
+        btn.innerHTML = `<strong>${escapeHtml(p.title)}</strong><span>${escapeHtml(p.note || "")}</span>`;
+        btn.addEventListener("click", ()=>{
+          openModal("รายละเอียดหลักสูตร", `
+            <div class="stack-12">
+              <p><b>${escapeHtml(p.title)}</b></p>
+              <p class="muted">${escapeHtml(p.note || "")}</p>
+              <ul>
+                <li>จุดเด่นหลักสูตร</li>
+                <li>แผนการเรียน</li>
+                <li>อาชีพหลังจบ</li>
+                <li>ช่องทางสมัคร/ติดต่อ</li>
+              </ul>
+              <div class="row wrap">
+                <button class="btn primary" onclick="alert('ตัวอย่าง: ไปหน้า Landing ของหลักสูตร')">ดูรายละเอียดเต็ม</button>
+                <button class="btn" onclick="closeModal()">ปิด</button>
+              </div>
+            </div>
+          `);
+        });
+        box.appendChild(btn);
+      });
+    }
+
+    // Research dropdown render
+    function renderResearchMenu(){
+      const box = $("#researchMenu");
+      box.innerHTML = "";
+      DATA.researchMenu.forEach(r=>{
+        const btn = document.createElement("button");
+        btn.className = "dd-item";
+        btn.type = "button";
+        btn.innerHTML = `<strong>${escapeHtml(r.title)}</strong><span>${escapeHtml(r.note || "")}</span>`;
+        btn.addEventListener("click", ()=>{
+          openModal(r.title, `
+            <div class="stack-12">
+              <p><b>${escapeHtml(r.title)}</b></p>
+              <p class="muted">${escapeHtml(r.note || "")}</p>
+              <p class="muted">หมายเหตุ: หน้านี้ควรมีบริการ/แบบฟอร์ม/ช่องทางติดต่อที่เกี่ยวข้อง</p>
+              <div class="row wrap">
+                <button class="btn primary" onclick="alert('ตัวอย่าง: เปิดหน้า/ระบบที่เกี่ยวข้อง')">เปิดหน้าเมนู</button>
+                <button class="btn" onclick="closeModal()">ปิด</button>
+              </div>
+            </div>
+          `);
+        });
+        box.appendChild(btn);
+      });
+    }
+
     let newsFilter = "ทั้งหมด";
     function filterNews(type){
       newsFilter = type;
@@ -1179,22 +1593,14 @@
       });
 
       if(list.length===0){
-        ul.innerHTML = `<li class="item"><strong style="font-size:13px;">ไม่พบข่าวตามตัวกรอง</strong><div class="meta"><span>ลองเลือก “ทั้งหมด”</span></div></li>`;
+        ul.innerHTML = `<li class="item" style="cursor:default"><strong style="font-size:13px;">ไม่พบข่าวตามตัวกรอง</strong><div class="meta"><span>ลองเลือก “ทั้งหมด”</span></div></li>`;
       }
-    }
-
-    let activityFilter = "ทั้งหมด";
-    function filterActivities(type){
-      activityFilter = type;
-      renderActivities();
     }
 
     function renderActivities(){
       const ul = $("#activityList");
       ul.innerHTML = "";
-      const list = DATA.activities.filter(a => activityFilter==="ทั้งหมด" ? true : true);
-
-      list.forEach(a=>{
+      DATA.activities.forEach(a=>{
         const li = document.createElement("li");
         li.className = "item";
         const badgeClass = a.status.includes("เปิดรับ") ? "" : "warn";
@@ -1305,7 +1711,7 @@
       });
 
       if(list.length===0){
-        grid.innerHTML = `<div class="s-card"><div class="s-cover"></div><div class="s-body"><h4>ไม่พบรายการ</h4><p>ลองเลือกตัวกรองอื่น</p></div></div>`;
+        grid.innerHTML = `<div class="s-card" style="cursor:default"><div class="s-cover"></div><div class="s-body"><h4>ไม่พบรายการ</h4><p>ลองเลือกตัวกรองอื่น</p></div></div>`;
       }
     }
 
@@ -1370,18 +1776,31 @@
       });
     }
 
-    /**********************
-     * SEARCH (client-side)
-     **********************/
-    function escapeHtml(str){
-      return String(str)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+    function renderITA(){
+      const ul = $("#itaList");
+      ul.innerHTML = "";
+      DATA.ita.forEach(x=>{
+        const li = document.createElement("li");
+        li.className = "item";
+        li.innerHTML = `
+          <div class="stack-8">
+            <strong style="font-size:13px;">${escapeHtml(x.title)}</strong>
+            <div class="meta">
+              <span class="tag">${escapeHtml(x.note)}</span>
+              <span class="tag">คลิกเพื่อดูรายละเอียด</span>
+            </div>
+          </div>
+        `;
+        li.addEventListener("click", ()=>{
+          openModal("ITA", templates[x.key] || `<div class="stack-12"><p><b>${escapeHtml(x.title)}</b></p><p class="muted">${escapeHtml(x.note)}</p></div>`);
+        });
+        ul.appendChild(li);
+      });
     }
 
+    /**********************
+     * SEARCH (simple)
+     **********************/
     function setupSearch(){
       const input = $("#searchInput");
       if(!input) return;
@@ -1389,46 +1808,44 @@
       input.addEventListener("input", ()=>{
         const q = input.value.trim().toLowerCase();
         if(!q){
-          // reset filters + render
           newsFilter = "ทั้งหมด";
           showcaseFilter = "ทั้งหมด";
           renderNews();
           renderActivities();
           renderShowcase();
+          renderITA();
           return;
         }
 
-        // simple search across news + activities + showcase
         const newsHits = DATA.news.filter(n => (n.title + " " + n.type + " " + (n.tags||[]).join(" ")).toLowerCase().includes(q));
         const actHits  = DATA.activities.filter(a => (a.title + " " + a.place + " " + a.status + " " + (a.tags||[]).join(" ")).toLowerCase().includes(q));
         const showHits = DATA.showcase.filter(s => (s.title + " " + s.group + " " + s.desc).toLowerCase().includes(q));
+        const itaHits  = DATA.ita.filter(i => (i.title + " " + i.note).toLowerCase().includes(q));
 
-        // Render hits
         $("#newsList").innerHTML = hitsToList(newsHits, "news");
         $("#activityList").innerHTML = hitsToList(actHits, "activity");
         $("#showcaseGrid").innerHTML = hitsToCards(showHits);
+        $("#itaList").innerHTML = hitsToList(itaHits, "ita");
 
-        // attach click handlers again for generated items
-        attachHitHandlers(newsHits, actHits, showHits);
+        attachHitHandlers(newsHits, actHits, showHits, itaHits);
       });
     }
 
     function hitsToList(items, kind){
       if(items.length===0){
-        return `<li class="item"><strong style="font-size:13px;">ไม่พบผลลัพธ์</strong><div class="meta"><span>ลองใช้คำค้นอื่น</span></div></li>`;
+        return `<li class="item" style="cursor:default"><strong style="font-size:13px;">ไม่พบผลลัพธ์</strong><div class="meta"><span>ลองใช้คำค้นอื่น</span></div></li>`;
       }
       return items.map((x, idx)=>{
-        const t = kind==="news" ? x.type : x.status;
-        const d = kind==="news" ? x.date : x.date;
-        const meta2 = kind==="news" ? (x.tags||[]).slice(0,2) : (x.tags||[]).slice(0,2);
+        const t = kind==="news" ? x.type : (kind==="activity" ? x.status : x.note);
+        const d = kind==="news" ? x.date : (kind==="activity" ? x.date : "");
         return `
           <li class="item" data-kind="${kind}" data-idx="${idx}">
             <div class="stack-8">
               <strong style="font-size:13px;">${escapeHtml(x.title)}</strong>
               <div class="meta">
-                <span class="tag">${escapeHtml(t)}</span>
-                <span>${escapeHtml(d)}</span>
-                ${meta2.map(m=>`<span class="tag">${escapeHtml(m)}</span>`).join("")}
+                <span class="tag">${escapeHtml(t || "รายการ")}</span>
+                ${d ? `<span>${escapeHtml(d)}</span>` : ``}
+                <span class="tag">คลิกเพื่อดู</span>
               </div>
             </div>
           </li>
@@ -1438,7 +1855,7 @@
 
     function hitsToCards(items){
       if(items.length===0){
-        return `<div class="s-card"><div class="s-cover"></div><div class="s-body"><h4>ไม่พบผลลัพธ์</h4><p>ลองใช้คำค้นอื่น</p></div></div>`;
+        return `<div class="s-card" style="cursor:default"><div class="s-cover"></div><div class="s-body"><h4>ไม่พบผลลัพธ์</h4><p>ลองใช้คำค้นอื่น</p></div></div>`;
       }
       return items.map((s, idx)=>`
         <div class="s-card" data-kind="showcase" data-idx="${idx}">
@@ -1455,7 +1872,7 @@
       `).join("");
     }
 
-    function attachHitHandlers(newsHits, actHits, showHits){
+    function attachHitHandlers(newsHits, actHits, showHits, itaHits){
       $$("#newsList .item[data-kind='news']").forEach((el)=>{
         el.addEventListener("click", ()=>{
           const idx = Number(el.getAttribute("data-idx"));
@@ -1464,7 +1881,6 @@
             <div class="stack-12">
               <p><b>${escapeHtml(n.title)}</b></p>
               <p class="muted">ประเภท: ${escapeHtml(n.type)} • ${escapeHtml(n.date)}</p>
-              <p class="muted">หมายเหตุ: ใส่รายละเอียดจริง/แนบไฟล์/ลิงก์ระบบได้ในโมดูลนี้</p>
             </div>
           `);
         });
@@ -1497,6 +1913,14 @@
           `);
         });
       });
+
+      $$("#itaList .item[data-kind='ita']").forEach((el)=>{
+        el.addEventListener("click", ()=>{
+          const idx = Number(el.getAttribute("data-idx"));
+          const it = itaHits[idx];
+          openModal("ITA", templates[it.key] || `<div class="stack-12"><p><b>${escapeHtml(it.title)}</b></p><p class="muted">${escapeHtml(it.note)}</p></div>`);
+        });
+      });
     }
 
     /**********************
@@ -1507,14 +1931,18 @@
       const d = new Date();
       $("#today").textContent = d.toLocaleDateString("th-TH", { year:"numeric", month:"short", day:"numeric" });
 
+      renderProgramsMenu();
+      renderResearchMenu();
       renderUrgent();
       renderQuickServices();
+      renderStudentServices();
       renderNews();
       renderActivities();
       renderLabs();
       renderShowcase();
       renderPartners();
       renderShorts();
+      renderITA();
       setupSearch();
 
       // Buttons
